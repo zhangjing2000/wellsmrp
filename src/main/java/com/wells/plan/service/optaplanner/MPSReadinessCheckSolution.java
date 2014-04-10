@@ -59,6 +59,7 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 	}
 
 	private void explodeFixedPlanEntry(FixedPlanEntry fixedPlanEntry) {
+		//System.out.println("explodeFixedPlanEntry:"+ fixedPlanEntry);
 		HyvePlant plant = fixedPlanEntry.getPlanLocation();
 		Map<Date, List<FixedPlanEntry>> fulfilledByPlant = fulfilledMPS.get(plant);
 		if (fulfilledByPlant == null) {
@@ -131,10 +132,7 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 				}
 			}
 		}
-		System.out.println("getFulfilledPlanEntryList called");
-		for (FulfilledPlanEntry entry:list) {
-			System.out.println(entry);
-		}
+		
 		return list;
 	}
 	

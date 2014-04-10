@@ -51,6 +51,7 @@ public class HyvePlanTest {
 	private static int ssdPart = 100004;
 	private static int memoryPart1 = 100005;
 	private static int memoryPart2 = 100006;
+	private static int memoryPart3 = 100007;
 	private static int cableAltPart1 = 100101;
 	private static int cableAltPart2 = 100102;
 	private static int powerPart = 100201;
@@ -138,6 +139,7 @@ public class HyvePlanTest {
 		
 		memory.addGroupDetail(entryID, entryDate, "Add Memory part", 1, MemberType.MATERIAL, "Memory Part", null, memoryPart1, 1, 1);
 		memory.addGroupDetail(entryID, entryDate, "Add Memory part", 2, MemberType.MATERIAL, "Memory Part", null, memoryPart2, 1, 1);
+		memory.addGroupDetail(entryID, entryDate, "Add Memory part", 2, MemberType.MATERIAL, "Memory Part", null, memoryPart3, 1, 1);
 		
 		harddrive.addGroupDetail(entryID, entryDate, "Add Hard drive part", 1, MemberType.MATERIAL, "HardDrive Part", null, harddrivePart, 1, 1);
 
@@ -147,19 +149,18 @@ public class HyvePlanTest {
 
 	private HyveProductGroup initAServerBOM() {
 		LoggedHyveProductGroup server = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ASSEMBLY, serverGroupName);
-		LoggedHyveProductGroup cables = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, cableGroupName);
 		LoggedHyveProductGroup power = initPowerAltGroup();
 		LoggedHyveProductGroup screws = initScrewsAltGroup();
 
 		LoggedHyveProductGroup chassis = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ASSEMBLY, chassisGroupName);
 		LoggedHyveProductGroup motherboard = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, motherboardGroupName);
 		LoggedHyveProductGroup processor = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, processorGroupName);
-		LoggedHyveProductGroup memory = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, memoryGroupName);
+		LoggedHyveProductGroup memory = initMemoryAltGroup();
 		LoggedHyveProductGroup harddrive = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, harddriveGroupName);
 		LoggedHyveProductGroup ssd = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, ssdGroupName);
 
 		server.addGroupDetail(entryID, entryDate, "Add Chassis", 1, MemberType.SUB_GROUP, "Chassis", chassis.getGroupID(), 0, 1, 1);
-		chassis.addGroupDetail(entryID, entryDate, "Add Screw", 1, MemberType.MATERIAL, "Screw", screws.getGroupID(), 0, 5, 5);
+		chassis.addGroupDetail(entryID, entryDate, "Add Screw", 1, MemberType.SUB_GROUP, "Screw", screws.getGroupID(), 0, 5, 5);
 		chassis.addGroupDetail(entryID, entryDate, "Add Power", 2, MemberType.SUB_GROUP, "Power", power.getGroupID(), 0, 1, 1);
 		
 		server.addGroupDetail(entryID, entryDate, "Add Motherboard", 2, MemberType.SUB_GROUP, "motherboard", motherboard.getGroupID(), 0, 1, 1);
@@ -168,15 +169,9 @@ public class HyvePlanTest {
 		server.addGroupDetail(entryID, entryDate, "Add Harddrive",5, MemberType.SUB_GROUP, "Harddrive", harddrive.getGroupID(), 0, 2, 2);
 		server.addGroupDetail(entryID, entryDate, "Add SSD", 6, MemberType.SUB_GROUP, "SSD", ssd.getGroupID(), 0, 1, 1);
 		
-		cables.addGroupDetail(entryID, entryDate, "Add Cable1", 1, MemberType.MATERIAL, "cable1", null, cableAltPart1, 1, 1);
-		cables.addGroupDetail(entryID, entryDate, "Add Cable2", 2, MemberType.MATERIAL, "cable2", null, cableAltPart2, 1, 1);
-		
 		processor.addGroupDetail(entryID, entryDate, "Add Processor", 1, MemberType.MATERIAL, "Processor Part", null, processorPart, 1, 1);
 
 		motherboard.addGroupDetail(entryID, entryDate, "Add Motherboard part", 1, MemberType.MATERIAL, "Motherboard Part", null, motherboardPart, 1, 1);
-		
-		memory.addGroupDetail(entryID, entryDate, "Add Memory part", 1, MemberType.MATERIAL, "Memory Part", null, memoryPart1, 1, 1);
-		memory.addGroupDetail(entryID, entryDate, "Add Memory part", 2, MemberType.MATERIAL, "Memory Part", null, memoryPart2, 1, 1);
 		
 		harddrive.addGroupDetail(entryID, entryDate, "Add Hard drive part", 1, MemberType.MATERIAL, "HardDrive Part", null, harddrivePart, 1, 1);
 
@@ -196,6 +191,14 @@ public class HyvePlanTest {
 		return bomService.createHyveProductGroupSnapshot(chassis, entryDate, "1.0");
 	}
 	
+	private LoggedHyveProductGroup initMemoryAltGroup() {
+		LoggedHyveProductGroup memory = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, memoryGroupName);
+		memory.addGroupDetail(entryID, entryDate, "Add Memory part", 1, MemberType.MATERIAL, "Memory Part", null, memoryPart1, 1, 1);
+		memory.addGroupDetail(entryID, entryDate, "Add Memory part", 2, MemberType.MATERIAL, "Memory Part", null, memoryPart2, 1, 1);
+		memory.addGroupDetail(entryID, entryDate, "Add Memory part", 3, MemberType.MATERIAL, "Memory Part", null, memoryPart3, 1, 1);
+		return memory;
+	}
+	
 	private LoggedHyveProductGroup initPowerAltGroup() {
 		LoggedHyveProductGroup power = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, powerGroupName);
 		power.addGroupDetail(entryID, entryDate, "Add Power", 1, MemberType.MATERIAL, "Power Part", null, powerPart, 1, 1);
@@ -204,9 +207,13 @@ public class HyvePlanTest {
 	
 	private LoggedHyveProductGroup initScrewsAltGroup() {
 		LoggedHyveProductGroup screws = bomService.createHyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, screwsGroupName);
-		screws.addGroupDetail(entryID, entryDate, "Add Screw1", 1, MemberType.MATERIAL, "screw1", null, screwAltPart1, 1, 1);
-		screws.addGroupDetail(entryID, entryDate, "Add Screw2", 2, MemberType.MATERIAL, "screw2", null, screwAltPart2, 1, 1);
+		addPartToAltGroup(screws, "Add Screw1", 1, "screw1", screwAltPart1);
+		addPartToAltGroup(screws, "Add Screw2", 2, "screw2", screwAltPart2);
 		return screws;
+	}
+
+	private void addPartToAltGroup(LoggedHyveProductGroup group, String comment, int lineNo,  String lineComment, int skuNo) {
+		group.addGroupDetail(entryID, entryDate, comment, lineNo, MemberType.MATERIAL, lineComment, null, skuNo, 1, 1);
 	}
 	
 	@After
@@ -230,7 +237,7 @@ public class HyvePlanTest {
 	private HyvePlan<MRPEntry> init1ChassisMRP() {
 		LoggedContractMRPImpl mrp = new LoggedContractMRPImpl(contract);
 		try {
-			MRPEntry screwPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant,5, screwAltPart2);
+			MRPEntry screwPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant,5, screwAltPart1);
 			MRPEntry powerPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 10, powerPart);
 			mrp.addPlanEntry(screwPlanEntry, logEntry);
 			mrp.addPlanEntry(powerPlanEntry, logEntry);
@@ -285,6 +292,110 @@ public class HyvePlanTest {
 	public void test2ChassisMPS() {
 		HyvePlan<MPSEntry> mps = init2ChassisMPS();
 		HyvePlan<MRPEntry> mrp = init2ChassisMRP();
+		MPSReadinessCheckSolution unsolvedSolution = new MPSReadinessCheckSolution(mps, mrp, bomService);
+		solver.solve(unsolvedSolution);
+		MPSReadinessCheckSolution solvedSolution = (MPSReadinessCheckSolution)solver.getBestSolution();
+		assertNotNull(solvedSolution);
+		System.out.println("score=" + solvedSolution.getScore().getHardScore());
+		assertTrue(solvedSolution.getScore().getHardScore() > 0);
+	}
+
+	private HyvePlan<MPSEntry> init1ServerMPS() {
+		LoggedContractMPSImpl mps = new LoggedContractMPSImpl(contract);
+		HyveProductGroup server = initAServerBOM();
+		MPSEntry planEntry;
+		try {
+			planEntry = new MPSEntry(sdf.parse("01/02/2014"), sdf.parse("01/03/2014"), plant, 1, server.getGroupID());
+			mps.addPlanEntry(planEntry, logEntry);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return mps;
+	}
+	
+	private HyvePlan<MRPEntry> init1ServerMRP() {
+		LoggedContractMRPImpl mrp = new LoggedContractMRPImpl(contract);
+		try {
+			MRPEntry screwPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 10, screwAltPart1);
+			MRPEntry powerPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 10, powerPart);
+			MRPEntry motherboardPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 1, motherboardPart);
+			MRPEntry processorPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 1, processorPart);
+			//MRPEntry memoryPlanEntry1 = new MRPEntry(sdf.parse("01/02/2014"),  plant, 2, memoryPart1);
+			MRPEntry memoryPlanEntry2 = new MRPEntry(sdf.parse("01/02/2014"),  plant, 2, memoryPart2);
+			MRPEntry harddrivePlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 2, harddrivePart);
+			MRPEntry ssdPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 1, ssdPart);
+			mrp.addPlanEntry(screwPlanEntry, logEntry);
+			mrp.addPlanEntry(powerPlanEntry, logEntry);
+			mrp.addPlanEntry(motherboardPlanEntry, logEntry);
+			mrp.addPlanEntry(processorPlanEntry, logEntry);
+			//mrp.addPlanEntry(memoryPlanEntry1, logEntry);
+			mrp.addPlanEntry(memoryPlanEntry2, logEntry);
+			mrp.addPlanEntry(harddrivePlanEntry, logEntry);
+			mrp.addPlanEntry(ssdPlanEntry, logEntry);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return mrp;
+	}
+	
+	@Test
+	public void test1ServerMPS() {
+		HyvePlan<MPSEntry> mps = init1ServerMPS();
+		HyvePlan<MRPEntry> mrp = init1ServerMRP();
+		MPSReadinessCheckSolution unsolvedSolution = new MPSReadinessCheckSolution(mps, mrp, bomService);
+		solver.solve(unsolvedSolution);
+		MPSReadinessCheckSolution solvedSolution = (MPSReadinessCheckSolution)solver.getBestSolution();
+		assertNotNull(solvedSolution);
+		System.out.println("score=" + solvedSolution.getScore().getHardScore());
+		assertTrue(solvedSolution.getScore().getHardScore() > 0);
+	}
+
+	private HyvePlan<MPSEntry> init2ServerMPS() {
+		LoggedContractMPSImpl mps = new LoggedContractMPSImpl(contract);
+		HyveProductGroup server = initAServerBOM();
+		MPSEntry planEntry;
+		try {
+			planEntry = new MPSEntry(sdf.parse("01/02/2014"), sdf.parse("01/03/2014"), plant, 2, server.getGroupID());
+			mps.addPlanEntry(planEntry, logEntry);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return mps;
+	}
+	
+	private HyvePlan<MRPEntry> init2ServerMRP() {
+		LoggedContractMRPImpl mrp = new LoggedContractMRPImpl(contract);
+		try {
+			MRPEntry screw1PlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 9, screwAltPart1);
+			MRPEntry screw2PlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 1, screwAltPart2);
+			MRPEntry powerPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 10, powerPart);
+			MRPEntry motherboardPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 2, motherboardPart);
+			MRPEntry processorPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 2, processorPart);
+			MRPEntry memoryPlanEntry1 = new MRPEntry(sdf.parse("01/02/2014"),  plant, 2, memoryPart1);
+			MRPEntry memoryPlanEntry2 = new MRPEntry(sdf.parse("01/02/2014"),  plant, 2, memoryPart2);
+			MRPEntry harddrivePlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 4, harddrivePart);
+			MRPEntry ssdPlanEntry = new MRPEntry(sdf.parse("01/02/2014"),  plant, 2, ssdPart);
+			mrp.addPlanEntry(screw1PlanEntry, logEntry);
+			mrp.addPlanEntry(screw2PlanEntry, logEntry);
+			mrp.addPlanEntry(powerPlanEntry, logEntry);
+			mrp.addPlanEntry(motherboardPlanEntry, logEntry);
+			mrp.addPlanEntry(processorPlanEntry, logEntry);
+			mrp.addPlanEntry(memoryPlanEntry1, logEntry);
+			mrp.addPlanEntry(memoryPlanEntry2, logEntry);
+			mrp.addPlanEntry(harddrivePlanEntry, logEntry);
+			mrp.addPlanEntry(ssdPlanEntry, logEntry);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return mrp;
+	}
+
+	@Test
+	public void test2ServerMPS() {
+		HyvePlan<MPSEntry> mps = init2ServerMPS();
+		HyvePlan<MRPEntry> mrp = init2ServerMRP();
 		MPSReadinessCheckSolution unsolvedSolution = new MPSReadinessCheckSolution(mps, mrp, bomService);
 		solver.solve(unsolvedSolution);
 		MPSReadinessCheckSolution solvedSolution = (MPSReadinessCheckSolution)solver.getBestSolution();

@@ -20,14 +20,20 @@
   <termination>
     <terminationCompositionStyle>OR</terminationCompositionStyle>
     <bestScoreLimit>0hard/-20000soft</bestScoreLimit>
-    <unimprovedSecondsSpentLimit>10</unimprovedSecondsSpentLimit>
+    <unimprovedSecondsSpentLimit>100</unimprovedSecondsSpentLimit>
   </termination>
 
   <constructionHeuristic>
-    <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
+    <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
   </constructionHeuristic>
 
   <localSearch>
+      <changeMoveSelector>
+		<selectionOrder>ORIGINAL</selectionOrder>
+        <valueSelector>
+          <variableName>fulfilledQty</variableName>
+        </valueSelector>
+      </changeMoveSelector>
     <acceptor>
       <entityTabuSize>7</entityTabuSize>
     </acceptor>
@@ -35,5 +41,4 @@
       <acceptedCountLimit>1000</acceptedCountLimit>
     </forager>
   </localSearch>
-
-</solver>
+  </solver>

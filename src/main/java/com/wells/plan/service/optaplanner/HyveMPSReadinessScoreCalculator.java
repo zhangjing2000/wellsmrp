@@ -15,6 +15,7 @@ import com.wells.plan.mrp.MRPEntry;
 public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MPSReadinessCheckSolution>{
 
 	public HardSoftScore calculateScore(MPSReadinessCheckSolution solution) {
+		//System.out.println("start calculateScore Called, solution=" + solution);
 		int  hardScore = 0, softScore = 0;
 		Map<HyvePlant, Map<Date, List<FixedPlanEntry>>> fulfilled = solution.getFulfilledMPS();
 		Map<PlanEntryIndex, MRPEntry> mrp = solution.getAccumulatedMRP();
@@ -26,36 +27,42 @@ public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MP
 				Date fulfilledDate = fulfilledByDateEntry.getKey();
 				Map<Integer, MRPEntry> mrpPlan = findMRPSupportByFulfilledDate(mrp, fulfilledLoc, fulfilledDate);
 				if (mrpPlan == null) {
-					hardScore -= 10;
+					hardScore = -10;
+					//System.out.println("no mrp plan, date=" + fulfilledDate);
+					break;
 				}
 				Map<Integer, Integer> skuDemands = fulfilledByDateEntry.getValue();
 				for (Map.Entry<Integer, Integer> skuDemand: skuDemands.entrySet()) {
+					System.out.println("skuDemand:" + skuDemand);
 					int skuNo = skuDemand.getKey();
 					int mpsQty = skuDemand.getValue();
-					System.out.println("calculateScore Called, skuNo=" + skuNo + ",mpsQty =" + mpsQty);
-					if (skuDemand.getValue() == 0) {
+					//System.out.println("calculateScore Called, skuNo=" + skuNo + ",mpsQty =" + mpsQty);
+					if (mpsQty == 0) {
 						hardScore++;
-						System.out.println("calculateScore no demand, hardscore:" + hardScore);
+						//System.out.println("calculateScore no demand, hardscore:" + hardScore);
 						continue;
 					}
-					MRPEntry mrpEntry = mrpPlan.get(skuDemand.getKey());
+					MRPEntry mrpEntry = mrpPlan.get(skuNo);
 					if (mrpEntry == null) {
-						hardScore-=10;
+						hardScore=-10;
+						//System.out.println("calculateScore no mrp, hardscore:" + hardScore + ",sku=" + skuDemand.getKey());
 						break;
 					}
-					if (mrpEntry.getPlanQty() >= skuDemand.getValue()) {
+					
+					if (mrpEntry.getPlanQty() >= mpsQty) {
 						hardScore++;
-						System.out.println("calculateScore mrp meet demand, hardscore:" + hardScore + ",mrpEntry=" + mrpEntry);
+						//System.out.println("calculateScore mrp meet demand, hardscore:" + hardScore + ",mrpEntry=" + mrpEntry);
 					} else { 
 						hardScore = -1;
-						System.out.println("calculateScore mrp less than demand, hardscore:" + hardScore + ",mrpEntry=" + mrpEntry);
+						//System.out.println("calculateScore mrp less than demand, hardscore:" + hardScore + ",mrpEntry=" + mrpEntry);
 						break;
 					}
 				}
 				if (hardScore < 0) break;
 			}
 		}
-		System.out.println("calculateScore Called, hardscore=" + hardScore);
+		//System.out.println("end calculateScore Called, hardScore=" + hardScore + ",solution=" + solution);
+		//System.out.println("");
 		return HardSoftScore.valueOf(hardScore, softScore);
 	}
 	
@@ -91,11 +98,11 @@ public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MP
 					List<FixedPlanEntry> fulfilledPlan = fulfilledByDateEntry.getValue();
 					for (FixedPlanEntry fixedPlanEntry: fulfilledPlan) {
 						if (fixedPlanEntry.getItemType() == MemberType.MATERIAL) {
-							//System.out.println("accoumulateDemandBySKU:" + fixedPlanEntry);
-							Integer fulfilledQty = skuDemand.get(fixedPlanEntry.getSkuNo());
-							if (fulfilledQty == null) fulfilledQty = 0;
-							fulfilledQty += fixedPlanEntry.getFulfilledQty();
-							skuDemand.put(fixedPlanEntry.getSkuNo(), fulfilledQty);
+							int skuNo = fixedPlanEntry.getSkuNo();
+							Integer planQty = skuDemand.get(skuNo);
+							if (planQty == null) planQty = 0;
+							planQty += fixedPlanEntry.getPlanQty();
+							skuDemand.put(skuNo, planQty);
 						}
 					}
 				}

@@ -67,7 +67,7 @@ public class FixedPlanEntry implements PlanEntry {
 		return bomQty;
 	}
 	public int getPlanQty() {
-		return parent == null? getFulfilledQty():parent.getPlanQty() * getFulfilledQty();
+		return parent == null? bomQty:parent.getPlanQty() * bomQty;
 	}
 	public int getFulfilledQty() {
 		return getBomQty();
@@ -128,10 +128,14 @@ public class FixedPlanEntry implements PlanEntry {
 	
 	@Override
 	public String toString() {
-		return "FixedPlanEntry [itemType=" + itemType + ", parent="  + (parent==null?"Null":"Not Null")
+		return "FixedPlanEntry [itemType=" + itemType + ", parent="  + (parent==null?"Null":parent.groupID)
 				+ ", children=" + children + ", groupID=" + groupID
 				+ ", skuNo=" + skuNo + ", planDate=" + planDate
-				+ ", planLocation=" + planLocation + ", bomQty=" + bomQty + "]";
+				+ ", planLocation=" + planLocation 
+				+ ", bomQty=" + bomQty
+				+ ", planQty=" + getPlanQty()
+				+ ", fulfilledQty = " + getFulfilledQty()
+				+ "]";
 	}
 	
 }

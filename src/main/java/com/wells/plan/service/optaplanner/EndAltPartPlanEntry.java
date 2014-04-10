@@ -20,25 +20,33 @@ public class EndAltPartPlanEntry extends FixedPlanEntry {
 	}
 	
 	public int getFulfilledQty() {
+		return getPlanQty() / getFulfilledParent().getBomQty();
+	}
+
+	public int getPlanQty() {
 		if (getFulfilledParent() == null) return 0;
 		if (getFulfilledParent().getFulfilledChildren() == null) return 0;
-		int totalFulfilledQty = 0;
+		int totalPlanQty = 0;
 		for (FixedPlanEntry sibling: getFulfilledParent().getFulfilledChildren()) {
 			if (sibling.equals(this)) continue;
-			totalFulfilledQty += sibling.getFulfilledQty();
+			totalPlanQty += sibling.getPlanQty();
 		}
-		return getFulfilledParent().getFulfilledQty() - totalFulfilledQty;
+		return getFulfilledParent().getPlanQty() - totalPlanQty;
 	}
-	
 
 	@Override
 	public String toString() {
 		return "EndAltPartPlanEntry [fulfilledQty=" + getFulfilledQty()
-				+ ", itemType=" + getItemType() + ", groupID="
-				+ getGroupID() + ", skuNo=" + getSkuNo()
-				+ ", planDate=" + getPlanDate() + ", plant="
-				+ getPlanLocation() + ", bomQty=" + getBomQty()
-				+ ", planQty=" + getPlanQty() + "]";
+				+ ", itemType=" + getItemType() 
+				+ ", parent="  + (getFulfilledParent()==null?"Null":getFulfilledParent().getGroupID()) 
+				+ ", groupID=" + getGroupID() 
+				+ ", skuNo=" + getSkuNo()
+				+ ", planDate=" + getPlanDate() 
+				+ ", plant=" + getPlanLocation() 
+				+ ", bomQty=" + getBomQty()
+				+ ", planQty=" + getPlanQty() 
+				+ ", fulfilledQty = " + getFulfilledQty()
+				+ "]";
 	}
 
 }

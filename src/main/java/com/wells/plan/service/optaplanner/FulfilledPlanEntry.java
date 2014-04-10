@@ -28,20 +28,24 @@ public class FulfilledPlanEntry extends FixedPlanEntry {
 		super(itemType, parent, groupID, skuNo, planDate, planQty, planLocation);
 	}
 	
+	public int getPlanQty() {
+		return getFulfilledParent().getBomQty() * getFulfilledQty();
+	}
+	
 	@PlanningVariable(valueRangeProviderRefs = {"fulfilledQtyList"})
 	public int getFulfilledQty() {
 		return fulfilledQty;
 	}
+	
 	public void setFulfilledQty(int fulfilledQty) {
-		//System.out.println( this.toString() + "GroupID:" + getGroupID() + "skuNo:" + getSkuNo() + "fulfilledQty=" + fulfilledQty);
+		System.out.println("setFulfilledQty:" + fulfilledQty + "sku:" + this.getSkuNo() + "bom:" + getFulfilledParent().getBomQty());
 		this.fulfilledQty = fulfilledQty;
 	}
 	
-	 @ValueRangeProvider(id = "fulfilledQtyList")
-	 public List<Integer> getFulfilledQtyList() {
+	@ValueRangeProvider(id = "fulfilledQtyList")
+	public List<Integer> getFulfilledQtyList() {
 		List<Integer> result = new ArrayList<Integer>();
-		for (int i=0;i<=getBomQty();i++) {
-			//System.out.println("getFulfilledQtyList, GroupID:" + getGroupID() + ",skuNo:" + getSkuNo() + ",fulfilledQty=" + fulfilledQty + ",i=" + i);
+		for (int i=0;i<=getFulfilledParent().getFulfilledParent().getPlanQty();i++) {
 	    	result.add(i);
 	    }
 	    return result;
@@ -50,11 +54,16 @@ public class FulfilledPlanEntry extends FixedPlanEntry {
 	@Override 
 	public String toString() {
 		return "FulfilledPlanEntry [fulfilledQty=" + fulfilledQty
-				+ ", itemType=" + getItemType() + ", groupID="
-				+ getGroupID() + ", skuNo=" + getSkuNo()
-				+ ", planDate=" + getPlanDate() + ", plant="
-				+ getPlanLocation() + ", bomQty=" + getBomQty()
-				+ ", planQty=" + getPlanQty() + "]";
+				+ ", itemType=" + getItemType() 
+				+ ", parent="  + (getFulfilledParent()==null?"Null":getFulfilledParent().getGroupID()) 
+				+ ", groupID=" + getGroupID() 
+				+ ", skuNo=" + getSkuNo()
+				+ ", planDate=" + getPlanDate() 
+				+ ", plant=" + getPlanLocation() 
+				+ ", bomQty=" + getBomQty()
+				+ ", planQty=" + getPlanQty() 
+				+ ", fulfilledQty = " + getFulfilledQty()
+				+ "]";
 	}
 	
 }
