@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.wells.log.common.LogEntry;
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntryLog;
 import com.wells.plan.concept.PlanEntryLogType;
 
@@ -22,7 +22,7 @@ public class MPSEntryLog extends MPSEntry implements PlanEntryLog<MPSEntry> {
 				mpsEntry.getPlanQty(), mpsEntry.getCustBOM(), 
 				logEntry.getLogUserID(), logEntry.getLogDate(), logEntry.getLogComment());
 	}
-	public MPSEntryLog(PlanEntryLogType logType, Date startDate, Date deliveryDate, HyvePlant plant, int deliveryQty,
+	public MPSEntryLog(PlanEntryLogType logType, Date startDate, Date deliveryDate, ProductionPlant plant, int deliveryQty,
 			UUID custBOM, int logUserID, Date logDate, String logComment) {
 		super(startDate, deliveryDate, plant, deliveryQty, custBOM);
 		this.logID = UUID.randomUUID();

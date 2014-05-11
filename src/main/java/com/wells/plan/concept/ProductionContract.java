@@ -6,7 +6,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
-public class HyveContract {
+public class ProductionContract {
 	private final int contractNo;
 	private final int custNo;
 	private String contractName;
@@ -68,7 +68,7 @@ public class HyveContract {
 	
 	private final SortedSet<ContractChangeLog> logs = new TreeSet<ContractChangeLog>();
 	
-	public HyveContract(int contractNo, int custNo) {
+	public ProductionContract(int contractNo, int custNo) {
 		super();
 		this.contractNo = contractNo;
 		this.custNo = custNo;
@@ -136,14 +136,14 @@ public class HyveContract {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HyveContract other = (HyveContract) obj;
+		ProductionContract other = (ProductionContract) obj;
 		if (contractNo != other.contractNo)
 			return false;
 		return true;
 	}
 	@Override
 	public String toString() {
-		return "HyveContract [contractNo=" + contractNo + ", contractName="
+		return "ProductionContract [contractNo=" + contractNo + ", contractName="
 				+ contractName + ", custNo=" + custNo + ", startDate="
 				+ startDate + ", endDate=" + endDate + "]";
 	}

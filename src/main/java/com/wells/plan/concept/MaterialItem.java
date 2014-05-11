@@ -2,7 +2,7 @@ package com.wells.plan.concept;
 
 import java.io.Serializable;
 
-public class HyveMaterial implements Serializable, Comparable<HyveMaterial> {
+public class MaterialItem implements Serializable, Comparable<MaterialItem> {
 
 	/**
 	 * 
@@ -12,7 +12,7 @@ public class HyveMaterial implements Serializable, Comparable<HyveMaterial> {
 	private final int skuNo;
 	private final String partNo;
 	
-	public HyveMaterial(int skuNo, String partNo) {
+	public MaterialItem(int skuNo, String partNo) {
 		super();
 		this.skuNo = skuNo;
 		this.partNo = partNo;
@@ -39,13 +39,13 @@ public class HyveMaterial implements Serializable, Comparable<HyveMaterial> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HyveMaterial other = (HyveMaterial) obj;
+		MaterialItem other = (MaterialItem) obj;
 		if (skuNo != other.skuNo)
 			return false;
 		return true;
 	}
 
-	public int compareTo(HyveMaterial o) {
+	public int compareTo(MaterialItem o) {
 		return skuNo - o.skuNo;
 	}
 	

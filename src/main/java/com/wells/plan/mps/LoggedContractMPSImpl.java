@@ -1,15 +1,15 @@
 package com.wells.plan.mps;
 
 import com.wells.log.common.LogEntry;
-import com.wells.plan.concept.HyveContract;
-import com.wells.plan.concept.LoggedHyvePlanImpl;
+import com.wells.plan.concept.ProductionContract;
+import com.wells.plan.concept.LoggedContractPlanImpl;
 import com.wells.plan.concept.PlanEntryLog;
 import com.wells.plan.concept.PlanEntryLogType;
 
-public class LoggedContractMPSImpl extends  LoggedHyvePlanImpl<MPSEntry> {
+public class LoggedContractMPSImpl extends  LoggedContractPlanImpl<MPSEntry> {
 
 	
-	public LoggedContractMPSImpl(HyveContract contract) {
+	public LoggedContractMPSImpl(ProductionContract contract) {
 		super(contract);
 	}
 

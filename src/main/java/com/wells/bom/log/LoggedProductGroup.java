@@ -7,15 +7,15 @@ import java.util.SortedSet;
 import java.util.UUID;
 
 import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.HyveProductGroup;
-import com.wells.bom.concept.HyveProductGroupMember;
+import com.wells.bom.concept.ProductGroup;
+import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.MemberType;
 import com.wells.bom.concept.TagType;
 
-public interface LoggedHyveProductGroup extends HyveProductGroup {
-	SortedSet<HyveProductGroupMember> getGroupDetailsAtGivenTime(Date timeStamp);	
-	SortedSet<HyveProductGroupMember> getGroupDetailsWithGivenTag(TagType tagType, String tagValue);
-	SortedSet<HyveProductGroupMember> getGroupDetailsWithGivenTimeAndTag(Date timeStamp, TagType tagType, String tagValue);
+public interface LoggedProductGroup extends ProductGroup {
+	SortedSet<ProductGroupMember> getGroupDetailsAtGivenTime(Date timeStamp);	
+	SortedSet<ProductGroupMember> getGroupDetailsWithGivenTag(TagType tagType, String tagValue);
+	SortedSet<ProductGroupMember> getGroupDetailsWithGivenTimeAndTag(Date timeStamp, TagType tagType, String tagValue);
 
 	String getTagValueAtGivenTime(TagType tagType, Date timeStamp);
 	Map<TagType, String> getGroupTagsAtGivenTime(Date timeStamp);

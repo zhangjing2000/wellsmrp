@@ -3,16 +3,16 @@ package com.wells.plan.forecast;
 import java.util.Date;
 import java.util.UUID;
 
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntry;
 
 public class ForecastEntry implements PlanEntry{
 	private final Date shipDate;
-	private final HyvePlant plant;
+	private final ProductionPlant plant;
 	private final int shipQty;
 	private final UUID custBOM;
 	
-	public ForecastEntry(Date shipDate, HyvePlant plantLocNo, int deliveryQty,
+	public ForecastEntry(Date shipDate, ProductionPlant plantLocNo, int deliveryQty,
 			UUID custBOM) {
 		super();
 		this.shipDate = shipDate;
@@ -24,7 +24,7 @@ public class ForecastEntry implements PlanEntry{
 	public Date getPlanDate() {
 		return shipDate;
 	}
-	public HyvePlant getPlanLocation() {
+	public ProductionPlant getPlanLocation() {
 		return plant;
 	}
 	public int getPlanQty() {

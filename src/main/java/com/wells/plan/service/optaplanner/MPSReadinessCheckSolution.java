@@ -14,37 +14,37 @@ import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.impl.solution.Solution;
 
 import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.HyveProductGroup;
-import com.wells.bom.concept.HyveProductGroupMember;
+import com.wells.bom.concept.ProductGroup;
+import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.MemberType;
-import com.wells.bom.service.HyveProductGroupService;
-import com.wells.plan.concept.HyvePlan;
-import com.wells.plan.concept.HyvePlant;
+import com.wells.bom.service.ProductGroupService;
+import com.wells.plan.concept.ContractPlan;
+import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.mps.MPSEntry;
 import com.wells.plan.mrp.MRPEntry;
 
 @PlanningSolution
 public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 
-	private HyvePlan<MPSEntry> mps;
-	private  HyvePlan<MRPEntry> mrp;
-	private HyveProductGroupService bomService;
+	private ContractPlan<MPSEntry> mps;
+	private  ContractPlan<MRPEntry> mrp;
+	private ProductGroupService bomService;
 	
-	private final Map<HyvePlant, Map<Date, List<FixedPlanEntry>>> fulfilledMPS;
+	private final Map<ProductionPlant, Map<Date, List<FixedPlanEntry>>> fulfilledMPS;
 	private final Map<PlanEntryIndex, MRPEntry> accumulatedMRP;
 	
 	private HardSoftScore score;
 	
 	public  MPSReadinessCheckSolution() {
-		this.fulfilledMPS = new HashMap<HyvePlant, Map<Date, List<FixedPlanEntry>>>();
+		this.fulfilledMPS = new HashMap<ProductionPlant, Map<Date, List<FixedPlanEntry>>>();
 		this.accumulatedMRP = new HashMap<PlanEntryIndex, MRPEntry>();
 	}
 	
-	public MPSReadinessCheckSolution(HyvePlan<MPSEntry> mps, HyvePlan<MRPEntry> mrp, HyveProductGroupService bomService) {
+	public MPSReadinessCheckSolution(ContractPlan<MPSEntry> mps, ContractPlan<MRPEntry> mrp, ProductGroupService bomService) {
 		this.mps = mps;
 		this.mrp = mrp;
 		this.bomService = bomService;
-		this.fulfilledMPS = new HashMap<HyvePlant, Map<Date, List<FixedPlanEntry>>>();
+		this.fulfilledMPS = new HashMap<ProductionPlant, Map<Date, List<FixedPlanEntry>>>();
 		this.accumulatedMRP = new HashMap<PlanEntryIndex, MRPEntry>();
 		explodeMPS();
 		accumulateMRP();
@@ -60,7 +60,7 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 
 	private void explodeFixedPlanEntry(FixedPlanEntry fixedPlanEntry) {
 		//System.out.println("explodeFixedPlanEntry:"+ fixedPlanEntry);
-		HyvePlant plant = fixedPlanEntry.getPlanLocation();
+		ProductionPlant plant = fixedPlanEntry.getPlanLocation();
 		Map<Date, List<FixedPlanEntry>> fulfilledByPlant = fulfilledMPS.get(plant);
 		if (fulfilledByPlant == null) {
 			fulfilledByPlant = new HashMap<Date, List<FixedPlanEntry>>();
@@ -79,10 +79,10 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 		}
 		UUID groupID = fixedPlanEntry.getGroupID();
 		if (groupID == null) return;
-		HyveProductGroup group = bomService.getHyveProductGroupSnapshot(groupID);
+		ProductGroup group = bomService.getProductGroupSnapshot(groupID);
 		int groupSize = group.getGroupDetails().size();
 		int i=0;
-		for (HyveProductGroupMember detail:group.getGroupDetails()) {
+		for (ProductGroupMember detail:group.getGroupDetails()) {
 			FixedPlanEntry entry = null;
 			if (group.getGroupType() == GroupType.ALTERNATIVE) {
 				if (groupSize == 1) {
@@ -112,11 +112,11 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 		}
 	}
 	
-	public HyvePlan<MPSEntry> getMps() {
+	public ContractPlan<MPSEntry> getMps() {
 		return mps;
 	}
 
-	public HyvePlan<MRPEntry> getMrp() {
+	public ContractPlan<MRPEntry> getMrp() {
 		return mrp;
 	}
 
@@ -136,7 +136,7 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 		return list;
 	}
 	
-	public Map<HyvePlant, Map<Date, List<FixedPlanEntry>>> getFulfilledMPS() {
+	public Map<ProductionPlant, Map<Date, List<FixedPlanEntry>>> getFulfilledMPS() {
 		return fulfilledMPS;
 	}
 

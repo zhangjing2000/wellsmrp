@@ -7,18 +7,18 @@ import java.util.List;
 
 import com.wells.log.common.LogEntry;
 
-public abstract class LoggedHyvePlanImpl<T extends PlanEntry> implements LoggedHyvePlan<T>{
+public abstract class LoggedContractPlanImpl<T extends PlanEntry> implements LoggedContractPlan<T>{
 
-	private final HyveContract hyveContract;
+	private final ProductionContract productionContract;
 	private final List<PlanEntryLog<T>> logs = new ArrayList<PlanEntryLog<T>>();
 
-	public LoggedHyvePlanImpl(HyveContract hyveContract) {
+	public LoggedContractPlanImpl(ProductionContract productionContract) {
 		super();
-		this.hyveContract = hyveContract;
+		this.productionContract = productionContract;
 	}
 
-	public HyveContract getContract() {
-		return hyveContract;
+	public ProductionContract getContract() {
+		return productionContract;
 	}
 
 	public List<PlanEntryLog<T>> getPlanLogs() {

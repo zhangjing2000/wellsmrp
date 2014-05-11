@@ -2,7 +2,7 @@ package com.wells.bom.concept;
 
 import java.util.UUID;
 
-public class HyveProductGroupMember implements Comparable<HyveProductGroupMember>{
+public class ProductGroupMember implements Comparable<ProductGroupMember>{
 	private final UUID groupID;
 	private final int lineNo;
 	private final String lineComment;
@@ -12,7 +12,7 @@ public class HyveProductGroupMember implements Comparable<HyveProductGroupMember
 	private final int minBOMQty;
 	private final int maxBOMQty;
 	
-	public HyveProductGroupMember(UUID groupID, int lineNo, String lineComment,
+	public ProductGroupMember(UUID groupID, int lineNo, String lineComment,
 			MemberType memberType, UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty) {
 		super();
 		this.groupID = groupID;
@@ -48,7 +48,7 @@ public class HyveProductGroupMember implements Comparable<HyveProductGroupMember
 	public int getMaxBOMQty() {
 		return maxBOMQty;
 	}
-	public int compareTo(HyveProductGroupMember m1) {
+	public int compareTo(ProductGroupMember m1) {
 		return lineNo - m1.getLineNo();
 	}
 	public String toString() {

@@ -1,14 +1,14 @@
 package com.wells.plan.mrp;
 
 import com.wells.log.common.LogEntry;
-import com.wells.plan.concept.HyveContract;
-import com.wells.plan.concept.LoggedHyvePlanImpl;
+import com.wells.plan.concept.ProductionContract;
+import com.wells.plan.concept.LoggedContractPlanImpl;
 import com.wells.plan.concept.PlanEntryLog;
 import com.wells.plan.concept.PlanEntryLogType;
 
-public class LoggedContractMRPImpl extends  LoggedHyvePlanImpl<MRPEntry> {
+public class LoggedContractMRPImpl extends  LoggedContractPlanImpl<MRPEntry> {
 	
-	public LoggedContractMRPImpl(HyveContract contract) {
+	public LoggedContractMRPImpl(ProductionContract contract) {
 		super(contract);
 	}
 

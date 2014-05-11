@@ -9,19 +9,19 @@ import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.impl.score.director.simple.SimpleScoreCalculator;
 
 import com.wells.bom.concept.MemberType;
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.mrp.MRPEntry;
 
-public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MPSReadinessCheckSolution>{
+public class MPSReadinessScoreCalculator implements SimpleScoreCalculator<MPSReadinessCheckSolution>{
 
 	public HardSoftScore calculateScore(MPSReadinessCheckSolution solution) {
 		//System.out.println("start calculateScore Called, solution=" + solution);
 		int  hardScore = 0, softScore = 0;
-		Map<HyvePlant, Map<Date, List<FixedPlanEntry>>> fulfilled = solution.getFulfilledMPS();
+		Map<ProductionPlant, Map<Date, List<FixedPlanEntry>>> fulfilled = solution.getFulfilledMPS();
 		Map<PlanEntryIndex, MRPEntry> mrp = solution.getAccumulatedMRP();
-		Map<HyvePlant, Map<Date, Map<Integer, Integer>>> aggregatecDemands = aggregateDemands(fulfilled);
-		for (Map.Entry<HyvePlant, Map<Date, Map<Integer, Integer>>> fulfilledByLocEntry: aggregatecDemands.entrySet()) {
-			HyvePlant fulfilledLoc = fulfilledByLocEntry.getKey();
+		Map<ProductionPlant, Map<Date, Map<Integer, Integer>>> aggregatecDemands = aggregateDemands(fulfilled);
+		for (Map.Entry<ProductionPlant, Map<Date, Map<Integer, Integer>>> fulfilledByLocEntry: aggregatecDemands.entrySet()) {
+			ProductionPlant fulfilledLoc = fulfilledByLocEntry.getKey();
 			Map<Date, Map<Integer, Integer>> fulfilledByLoc = fulfilledByLocEntry.getValue();
 			for (Map.Entry<Date, Map<Integer, Integer>> fulfilledByDateEntry: fulfilledByLoc.entrySet()) {
 				Date fulfilledDate = fulfilledByDateEntry.getKey();
@@ -66,11 +66,11 @@ public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MP
 		return HardSoftScore.valueOf(hardScore, softScore);
 	}
 	
-	private Map<HyvePlant, Map<Date, Map<Integer, Integer>>> aggregateDemands(
-			Map<HyvePlant, Map<Date, List<FixedPlanEntry>>> fulfilled) {
-		Map <HyvePlant, Map<Date, Map<Integer, Integer>>> demands = new HashMap<HyvePlant, Map<Date, Map<Integer, Integer>>>();
-		for (Map.Entry<HyvePlant, Map<Date, List<FixedPlanEntry>>> fulfilledByLocEntry: fulfilled.entrySet()) {
-			HyvePlant fulfilledLoc = fulfilledByLocEntry.getKey();
+	private Map<ProductionPlant, Map<Date, Map<Integer, Integer>>> aggregateDemands(
+			Map<ProductionPlant, Map<Date, List<FixedPlanEntry>>> fulfilled) {
+		Map <ProductionPlant, Map<Date, Map<Integer, Integer>>> demands = new HashMap<ProductionPlant, Map<Date, Map<Integer, Integer>>>();
+		for (Map.Entry<ProductionPlant, Map<Date, List<FixedPlanEntry>>> fulfilledByLocEntry: fulfilled.entrySet()) {
+			ProductionPlant fulfilledLoc = fulfilledByLocEntry.getKey();
 			Map<Date, Map<Integer, Integer>> demandsByLoc = demands.get(fulfilledLoc);
 			if (demandsByLoc == null) {
 				demandsByLoc = new HashMap<Date, Map<Integer, Integer>>();
@@ -85,8 +85,8 @@ public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MP
 				}
 			}
 		}
-		for (Map.Entry<HyvePlant, Map<Date, Map<Integer, Integer>>> demandsByLocEntry: demands.entrySet()) {
-			HyvePlant plant = demandsByLocEntry.getKey();
+		for (Map.Entry<ProductionPlant, Map<Date, Map<Integer, Integer>>> demandsByLocEntry: demands.entrySet()) {
+			ProductionPlant plant = demandsByLocEntry.getKey();
 			Map<Date, List<FixedPlanEntry>> fulfilledByLoc = fulfilled.get(plant);
 			Map<Date, Map<Integer, Integer>> demandsByLoc = demands.get(plant);
 			for (Map.Entry<Date, Map<Integer, Integer>> demandByDate: demandsByLoc.entrySet()) {
@@ -112,10 +112,10 @@ public class HyveMPSReadinessScoreCalculator implements SimpleScoreCalculator<MP
 	}
 	
 	private Map<Integer, MRPEntry> findMRPSupportByFulfilledDate(
-			Map<PlanEntryIndex, MRPEntry> mrp, HyvePlant plant, Date fulfilledDate) {
+			Map<PlanEntryIndex, MRPEntry> mrp, ProductionPlant plant, Date fulfilledDate) {
 		Map<Integer, MRPEntry> mrpSkuMap = new HashMap<Integer, MRPEntry>();
 		for (MRPEntry mrpEntry: mrp.values()) {
-			HyvePlant thisMRPPlant = mrpEntry.getPlanLocation();
+			ProductionPlant thisMRPPlant = mrpEntry.getPlanLocation();
 			if (!thisMRPPlant.equals(plant)) continue;
 			Date thisMRPDate = mrpEntry.getPlanDate();
 			if (thisMRPDate.after(fulfilledDate)) continue;

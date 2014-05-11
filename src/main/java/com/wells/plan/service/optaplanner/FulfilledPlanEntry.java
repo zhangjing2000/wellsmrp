@@ -9,22 +9,22 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
-import com.wells.bom.concept.HyveProductGroupMember;
+import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.MemberType;
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 
 @PlanningEntity(difficultyComparatorClass = PlanEntryDifficultyComparator.class)
 public class FulfilledPlanEntry extends FixedPlanEntry {
 	
 	private int fulfilledQty = 0;
 	
-	public FulfilledPlanEntry(HyveProductGroupMember planItem, FixedPlanEntry fulfilledParent, Date planDate, HyvePlant planLocation) {
+	public FulfilledPlanEntry(ProductGroupMember planItem, FixedPlanEntry fulfilledParent, Date planDate, ProductionPlant planLocation) {
 		this(planItem.getMemberType(), fulfilledParent, planItem.getSubGroupID(), 
 				planItem.getSkuNo(), planDate, planItem.getMinBOMQty(), planLocation);
 	}
 
 	public FulfilledPlanEntry(MemberType itemType, FixedPlanEntry parent, UUID groupID,
-			int skuNo, Date planDate, int planQty, HyvePlant planLocation) {
+			int skuNo, Date planDate, int planQty, ProductionPlant planLocation) {
 		super(itemType, parent, groupID, skuNo, planDate, planQty, planLocation);
 	}
 	

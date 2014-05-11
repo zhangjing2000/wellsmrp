@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.wells.log.common.LogEntry;
 
-public interface LoggedHyvePlan<T extends PlanEntry> extends HyvePlan<T> {
+public interface LoggedContractPlan<T extends PlanEntry> extends ContractPlan<T> {
 	List<T> getPlanSnapshot(Date snapshotDate);
 	List<PlanEntryLog<T>> getPlanLogs();
 	void addPlanEntry(T planEntry, LogEntry logEntry);

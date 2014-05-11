@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.wells.log.common.LogEntry;
 
-public abstract class HyveGroupChangeLog implements java.io.Serializable, Comparable<HyveGroupChangeLog>, LogEntry {
+public abstract class ProductGroupChangeLog implements java.io.Serializable, Comparable<ProductGroupChangeLog>, LogEntry {
 	/**
 	 * 
 	 */
@@ -19,7 +19,7 @@ public abstract class HyveGroupChangeLog implements java.io.Serializable, Compar
 	private final GroupChangeLogType logType;
 	private final String logComment;
 	
-	public HyveGroupChangeLog(UUID logGroupID, int logUserID, Date logDate, GroupChangeLogType logType, String logComment) {
+	public ProductGroupChangeLog(UUID logGroupID, int logUserID, Date logDate, GroupChangeLogType logType, String logComment) {
 		super();
 		this.logID = UUID.randomUUID();
 		this.logGroupID = logGroupID;
@@ -68,7 +68,7 @@ public abstract class HyveGroupChangeLog implements java.io.Serializable, Compar
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HyveGroupChangeLog other = (HyveGroupChangeLog) obj;
+		ProductGroupChangeLog other = (ProductGroupChangeLog) obj;
 		if (logID == null) {
 			if (other.logID != null)
 				return false;
@@ -77,7 +77,7 @@ public abstract class HyveGroupChangeLog implements java.io.Serializable, Compar
 		return true;
 	}
 
-	public int compareTo(HyveGroupChangeLog arg0) {
+	public int compareTo(ProductGroupChangeLog arg0) {
 		if(logDate.equals(arg0.getLogDate()))
 			return logID.compareTo(arg0.logID);
 		else 

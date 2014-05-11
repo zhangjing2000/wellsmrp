@@ -2,7 +2,7 @@ package com.wells.plan.concept;
 
 import java.io.Serializable;
 
-public class HyvePlant implements Serializable, Comparable<HyvePlant>  {
+public class ProductionPlant implements Serializable, Comparable<ProductionPlant>  {
 
 	/**
 	 * 
@@ -12,7 +12,7 @@ public class HyvePlant implements Serializable, Comparable<HyvePlant>  {
 	private final int locNo;
 	private final String name;
 	private final String countryCode;
-	public HyvePlant(int locNo, String name, String countryCode) {
+	public ProductionPlant(int locNo, String name, String countryCode) {
 		super();
 		this.locNo = locNo;
 		this.name = name;
@@ -27,7 +27,7 @@ public class HyvePlant implements Serializable, Comparable<HyvePlant>  {
 	public String getCountryCode() {
 		return countryCode;
 	}
-	public int compareTo(HyvePlant arg0) {
+	public int compareTo(ProductionPlant arg0) {
 		return this.locNo - arg0.getLocNo();
 	}
 	@Override
@@ -42,14 +42,14 @@ public class HyvePlant implements Serializable, Comparable<HyvePlant>  {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HyvePlant other = (HyvePlant) obj;
+		ProductionPlant other = (ProductionPlant) obj;
 		if (locNo != other.locNo)
 			return false;
 		return true;
 	}
 	@Override
 	public String toString() {
-		return "HyvePlant [locNo=" + locNo + ", name=" + name
+		return "ProductionPlant [locNo=" + locNo + ", name=" + name
 				+ ", countryCode=" + countryCode + "]";
 	}
 }

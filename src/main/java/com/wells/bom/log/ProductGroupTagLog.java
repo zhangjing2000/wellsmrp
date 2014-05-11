@@ -5,12 +5,12 @@ import java.util.UUID;
 
 import com.wells.bom.concept.TagType;
 
-class HyveGroupTagLog extends HyveGroupChangeLog {
+class ProductGroupTagLog extends ProductGroupChangeLog {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	HyveGroupTagLog(UUID logGroupID, int logUserID, Date logDate,
+	ProductGroupTagLog(UUID logGroupID, int logUserID, Date logDate,
 			GroupChangeLogType logType, String logComment,
 			TagType tagType, String tagValue) {
 		super(logGroupID, logUserID, logDate, logType, logComment);

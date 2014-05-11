@@ -6,21 +6,21 @@ import java.util.SortedSet;
 import java.util.UUID;
 
 import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.HyveProductGroupMember;
+import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.TagType;
 
-public class HyveGroupSnapshot implements SnapshotedHyveProductGroup {
+public class ProductGroupSnapshot implements SnapshotedProductGroup {
 
 	private final UUID snapshotGroupID;
 	private final Date snapshotDateTime;
 	private final String groupName;
 	private final GroupType groupType; 
 	private final UUID loggedGroupID;
-	private final SortedSet<HyveProductGroupMember> groupDetails; 
+	private final SortedSet<ProductGroupMember> groupDetails; 
 	private final Map<TagType, String> groupTags;
 	
-	public HyveGroupSnapshot(UUID loggedGroupID, Date snapshotDateTime,
-			SortedSet<HyveProductGroupMember> groupDetails,
+	public ProductGroupSnapshot(UUID loggedGroupID, Date snapshotDateTime,
+			SortedSet<ProductGroupMember> groupDetails,
 			Map<TagType, String> groupTags) {
 		super();
 		this.snapshotGroupID = UUID.randomUUID();
@@ -44,7 +44,7 @@ public class HyveGroupSnapshot implements SnapshotedHyveProductGroup {
 		return groupType;
 	}
 
-	public SortedSet<HyveProductGroupMember> getGroupDetails() {
+	public SortedSet<ProductGroupMember> getGroupDetails() {
 		return groupDetails;
 	}
 

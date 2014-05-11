@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.wells.log.common.LogEntry;
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntryLog;
 import com.wells.plan.concept.PlanEntryLogType;
 
@@ -22,7 +22,7 @@ public class MRPEntryLog extends MRPEntry implements PlanEntryLog<MRPEntry> {
 				mrpEntry.getPlanQty(), mrpEntry.getSkuNo(), 
 				logEntry.getLogUserID(), logEntry.getLogDate(), logEntry.getLogComment());
 	}
-	public MRPEntryLog(PlanEntryLogType logType, Date startDate, HyvePlant plant, int deliveryQty,
+	public MRPEntryLog(PlanEntryLogType logType, Date startDate, ProductionPlant plant, int deliveryQty,
 			int skuNo, int logUserID, Date logDate, String logComment) {
 		super(startDate, plant, deliveryQty, skuNo);
 		this.logID = UUID.randomUUID();

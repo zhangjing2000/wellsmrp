@@ -3,17 +3,17 @@ package com.wells.plan.mps;
 import java.util.Date;
 import java.util.UUID;
 
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntry;
 
 public class MPSEntry implements PlanEntry {
 	private final Date plannedDeliveryDate;
 	private final Date plannedStartDate;
-	private final HyvePlant plant;
+	private final ProductionPlant plant;
 	private final int plannedQty;
 	private final UUID custBOM;
 	
-	public MPSEntry(Date startDate, Date endDate, HyvePlant plant, int deliveryQty,
+	public MPSEntry(Date startDate, Date endDate, ProductionPlant plant, int deliveryQty,
 			UUID custBOM) {
 		super();
 		this.plannedDeliveryDate = endDate;
@@ -29,7 +29,7 @@ public class MPSEntry implements PlanEntry {
 	public Date getPlanDate() {
 		return plannedStartDate;
 	}
-	public HyvePlant getPlanLocation() {
+	public ProductionPlant getPlanLocation() {
 		return plant;
 	}
 	public int getPlanQty() {

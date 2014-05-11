@@ -3,19 +3,19 @@ package com.wells.plan.service.optaplanner;
 import java.util.Date;
 import java.util.UUID;
 
-import com.wells.bom.concept.HyveProductGroupMember;
+import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.MemberType;
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 
 public class EndAltPartPlanEntry extends FixedPlanEntry {
 	
-	public EndAltPartPlanEntry(HyveProductGroupMember planItem, FixedPlanEntry fulfilledParent, Date planDate, HyvePlant planLocation) {
+	public EndAltPartPlanEntry(ProductGroupMember planItem, FixedPlanEntry fulfilledParent, Date planDate, ProductionPlant planLocation) {
 		this(planItem.getMemberType(), fulfilledParent, planItem.getSubGroupID(), 
 				planItem.getSkuNo(), planDate, planItem.getMinBOMQty(), planLocation);
 	}
 
 	public EndAltPartPlanEntry(MemberType itemType, FixedPlanEntry parent, UUID groupID,
-			int skuNo, Date planDate, int planQty, HyvePlant planLocation) {
+			int skuNo, Date planDate, int planQty, ProductionPlant planLocation) {
 		super(itemType, parent, groupID, skuNo, planDate, planQty, planLocation);
 	}
 	

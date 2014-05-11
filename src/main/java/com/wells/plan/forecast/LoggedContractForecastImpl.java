@@ -1,13 +1,13 @@
 package com.wells.plan.forecast;
 
 import com.wells.log.common.LogEntry;
-import com.wells.plan.concept.HyveContract;
-import com.wells.plan.concept.LoggedHyvePlanImpl;
+import com.wells.plan.concept.ProductionContract;
+import com.wells.plan.concept.LoggedContractPlanImpl;
 import com.wells.plan.concept.PlanEntryLogType;
 
-public class LoggedContractForecastImpl extends LoggedHyvePlanImpl<ForecastEntry> {
+public class LoggedContractForecastImpl extends LoggedContractPlanImpl<ForecastEntry> {
 
-	public LoggedContractForecastImpl(HyveContract contract) {
+	public LoggedContractForecastImpl(ProductionContract contract) {
 		super(contract);
 	}
 

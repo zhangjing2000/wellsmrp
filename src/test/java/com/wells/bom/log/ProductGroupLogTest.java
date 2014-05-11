@@ -18,18 +18,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.HyveProductGroup;
-import com.wells.bom.concept.HyveProductGroupMember;
+import com.wells.bom.concept.ProductGroup;
+import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.MemberType;
 import com.wells.bom.concept.TagType;
-import com.wells.bom.log.HyveProductGroupLog;
+import com.wells.bom.log.ProductGroupLog;
 import com.wells.bom.log.exception.InvalidGroupTypeException;
 import com.wells.bom.log.exception.NullGroupTypeException;
 
-public class HyveProductGroupLogTest {
+public class ProductGroupLogTest {
 	
-	private HyveProductGroupLog ash13Server;
-	private HyveProductGroupLog cables;
+	private ProductGroupLog ash13Server;
+	private ProductGroupLog cables;
 	private static String rackGroupName = "Ash13Rack";
 	private static String serverGroupName = "Ash13Server";
 	private static String chassisGroupName ="Chassis";
@@ -56,9 +56,9 @@ public class HyveProductGroupLogTest {
 	@Before
 	public void setUp() throws Exception {
 		entryDate = sdf.parse("01/01/2014");
-		ash13Server = new HyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ASSEMBLY, serverGroupName);
-		cables = new HyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, cableGroupName);
-		//power = new HyveProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, powerGroupName);
+		ash13Server = new ProductGroupLog(entryID, entryDate, "Init Test", GroupType.ASSEMBLY, serverGroupName);
+		cables = new ProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, cableGroupName);
+		//power = new ProductGroupLog(entryID, entryDate, "Init Test", GroupType.ALTERNATIVE, powerGroupName);
 	}
 
 	@After
@@ -66,9 +66,9 @@ public class HyveProductGroupLogTest {
 	}
 
 	@Test
-	public void testHyveProductGroupLog() throws ParseException {
+	public void testProductGroupLog() throws ParseException {
 		entryDate = sdf.parse("01/01/2014");
-		HyveProductGroup ash13Rack = new HyveProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
+		ProductGroup ash13Rack = new ProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
 		assertNotNull(ash13Rack);
 	}
 
@@ -106,10 +106,10 @@ public class HyveProductGroupLogTest {
 	@Test
 	public void testGetAnAssemblyGroupDetailLine() throws ParseException {
 		entryDate = sdf.parse("01/01/2014");
-		HyveProductGroupLog ash13Rack = new HyveProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
+		ProductGroupLog ash13Rack = new ProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
 		ash13Rack.addGroupDetail(entryID, entryDate, "test add server", 1, 
 				MemberType.SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
-		SortedSet<HyveProductGroupMember> details = ash13Rack.getGroupDetails(); 
+		SortedSet<ProductGroupMember> details = ash13Rack.getGroupDetails(); 
 		assertNotNull(details);
 		assertTrue(details.size()==1);
 		assertEquals(ash13Server.getGroupID(), details.first().getSubGroupID());
@@ -119,12 +119,12 @@ public class HyveProductGroupLogTest {
 	@Test
 	public void testGetAnAlternativeGroupDetailLine() throws ParseException {
 		entryDate = sdf.parse("01/01/2014");
-		HyveProductGroupLog ash13Rack = new HyveProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
+		ProductGroupLog ash13Rack = new ProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
 		ash13Rack.addGroupDetail(entryID, entryDate, "test add server", 1, 
 				MemberType.SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
 		ash13Rack.addGroupDetail(entryID, entryDate, "test add cable", 2, 
 				MemberType.SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 0, 0, 0);
-		SortedSet<HyveProductGroupMember> details = ash13Rack.getGroupDetails(); 
+		SortedSet<ProductGroupMember> details = ash13Rack.getGroupDetails(); 
 		assertNotNull(details);
 		assertTrue(details.size()==2);
 		System.out.println(details.first().getClass());
@@ -140,32 +140,32 @@ public class HyveProductGroupLogTest {
 		Date date2 = sdf.parse("01/02/2014");
 		Date date3 = sdf.parse("01/03/2014");
 		Date date4 = sdf.parse("01/04/2014");
-		HyveProductGroupLog ash13Rack = new HyveProductGroupLog(entryID, date1, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
-		HyveProductGroupLog ash13Server = new HyveProductGroupLog(entryID, date2, "Init Test", GroupType.ASSEMBLY, serverGroupName);
-		HyveProductGroupLog cables = new HyveProductGroupLog(entryID, date3, "Init Test", GroupType.ALTERNATIVE, cableGroupName);
+		ProductGroupLog ash13Rack = new ProductGroupLog(entryID, date1, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
+		ProductGroupLog ash13Server = new ProductGroupLog(entryID, date2, "Init Test", GroupType.ASSEMBLY, serverGroupName);
+		ProductGroupLog cables = new ProductGroupLog(entryID, date3, "Init Test", GroupType.ALTERNATIVE, cableGroupName);
 		ash13Rack.addGroupDetail(entryID, date2, "test add server", 1, 
 				MemberType.SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
 		ash13Rack.addGroupDetail(entryID, date3, "test add cable", 2, 
 				MemberType.SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 0, 0, 0);
 		ash13Rack.deleteGroupDetail(entryID, date4, "test remove server", 1);
 
-		SortedSet<HyveProductGroupMember> details = ash13Rack.getGroupDetails(); 
+		SortedSet<ProductGroupMember> details = ash13Rack.getGroupDetails(); 
 		assertNotNull(details);
 		assertTrue(details.size()==1);
 		System.out.println(details.first().getClass());
 		assertEquals(cables.getGroupID(), details.first().getSubGroupID());
 
-		SortedSet<HyveProductGroupMember> detailsAtDate1 = ash13Rack.getGroupDetailsAtGivenTime(date1); 
+		SortedSet<ProductGroupMember> detailsAtDate1 = ash13Rack.getGroupDetailsAtGivenTime(date1); 
 		assertNotNull(detailsAtDate1);
 		assertTrue(detailsAtDate1.size()==0);
 		
-		SortedSet<HyveProductGroupMember> detailsAtDate2 = ash13Rack.getGroupDetailsAtGivenTime(date2); 
+		SortedSet<ProductGroupMember> detailsAtDate2 = ash13Rack.getGroupDetailsAtGivenTime(date2); 
 		assertNotNull(detailsAtDate2);
 		assertTrue(detailsAtDate2.size()==1);
 		System.out.println("date 2, first line:" + detailsAtDate2.first().getClass());
 		assertEquals(ash13Server.getGroupID(), detailsAtDate2.first().getSubGroupID());
 
-		SortedSet<HyveProductGroupMember> detailsAtDate3 = ash13Rack.getGroupDetailsAtGivenTime(date3); 
+		SortedSet<ProductGroupMember> detailsAtDate3 = ash13Rack.getGroupDetailsAtGivenTime(date3); 
 		assertNotNull(detailsAtDate3);
 		assertTrue(detailsAtDate3.size()==2);
 		System.out.println("date 3, first line:" + detailsAtDate3.first().getClass());
@@ -174,7 +174,7 @@ public class HyveProductGroupLogTest {
 		System.out.println("date 3, last line:" + detailsAtDate3.last().getClass());
 		assertEquals(cables.getGroupID(), detailsAtDate3.last().getSubGroupID());
 
-		SortedSet<HyveProductGroupMember> detailsAtDate4 = ash13Rack.getGroupDetailsAtGivenTime(date4); 
+		SortedSet<ProductGroupMember> detailsAtDate4 = ash13Rack.getGroupDetailsAtGivenTime(date4); 
 		assertNotNull(detailsAtDate4);
 		assertTrue(detailsAtDate4.size()==1);
 		System.out.println("date 4, first line:" + detailsAtDate4.first().getClass());
@@ -246,19 +246,19 @@ public class HyveProductGroupLogTest {
 		}
 	}
 
-	private HyveProductGroup addGroupDetailToAshServer(int entryID, Date entryDate, String entryComment, 
+	private ProductGroup addGroupDetailToAshServer(int entryID, Date entryDate, String entryComment, 
 			GroupType groupType, String groupName, MemberType memberType, 
 			String lineComment, int minBOMQty, int maxBOMQty) {
-		HyveProductGroup prodGroup = new HyveProductGroupLog(entryID, entryDate, entryComment, groupType, groupName);
+		ProductGroup prodGroup = new ProductGroupLog(entryID, entryDate, entryComment, groupType, groupName);
 		ash13Server.addGroupDetail(entryID, entryDate, entryComment, 0, memberType, lineComment, 
 				prodGroup.getGroupID(), 0, minBOMQty, maxBOMQty);
 		return prodGroup;
 	}
 	
-	private HyveProductGroup insertGroupDetailToAshServer(int entryID, Date entryDate, String entryComment, 
+	private ProductGroup insertGroupDetailToAshServer(int entryID, Date entryDate, String entryComment, 
 			int lineNo, GroupType groupType, String groupName, MemberType memberType, 
 			String lineComment, int minBOMQty, int maxBOMQty) {
-		HyveProductGroup prodGroup = new HyveProductGroupLog(entryID, entryDate, entryComment, groupType, groupName);
+		ProductGroup prodGroup = new ProductGroupLog(entryID, entryDate, entryComment, groupType, groupName);
 		ash13Server.addGroupDetail(entryID, entryDate, entryComment, lineNo, memberType, lineComment, 
 				prodGroup.getGroupID(), lineNo, minBOMQty, maxBOMQty);
 		return prodGroup;
@@ -279,7 +279,7 @@ public class HyveProductGroupLogTest {
 	@Test
 	public void testWholeServer() throws ParseException {
 		String comment;
-		SortedSet<HyveProductGroupMember> details;
+		SortedSet<ProductGroupMember> details;
 		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		Calendar cal = Calendar.getInstance();
 		Date date1 = sdf.parse("01/01/2014");
@@ -327,7 +327,7 @@ public class HyveProductGroupLogTest {
 		comment = "day4, add ssd";
 		cal.add(Calendar.DATE, 1);
 		entryDate = cal.getTime();
-		HyveProductGroup ssd = addGroupDetailToAshServer(entryID, entryDate, comment,
+		ProductGroup ssd = addGroupDetailToAshServer(entryID, entryDate, comment,
 				GroupType.ALTERNATIVE, ssdGroupName, MemberType.SUB_GROUP,
 				"ssd sub bom", 2, 2);
 		details = ash13Server.getGroupDetailsAtGivenTime(entryDate); 
@@ -347,7 +347,7 @@ public class HyveProductGroupLogTest {
 		comment = "day6, add processor";
 		cal.add(Calendar.DATE, 1);
 		entryDate = cal.getTime();
-		HyveProductGroup processor = addGroupDetailToAshServer(entryID, entryDate, comment,
+		ProductGroup processor = addGroupDetailToAshServer(entryID, entryDate, comment,
 				GroupType.ALTERNATIVE, processorGroupName, MemberType.SUB_GROUP,
 				"processor sub bom", 1, 1);
 		
@@ -374,7 +374,7 @@ public class HyveProductGroupLogTest {
 		comment = "day8, add memory";
 		cal.add(Calendar.DATE, 1);
 		entryDate = cal.getTime();
-		HyveProductGroup memory = addGroupDetailToAshServer(entryID, entryDate, comment,
+		ProductGroup memory = addGroupDetailToAshServer(entryID, entryDate, comment,
 				GroupType.ALTERNATIVE, memoryGroupName, MemberType.SUB_GROUP,
 				"memory sub bom", 2, 4);
 
@@ -418,7 +418,7 @@ public class HyveProductGroupLogTest {
 		comment = "day11, insert hard drive at line 3";
 		cal.add(Calendar.DATE, 1);
 		entryDate = cal.getTime();
-		HyveProductGroup harddrive = insertGroupDetailToAshServer(entryID, entryDate, comment,
+		ProductGroup harddrive = insertGroupDetailToAshServer(entryID, entryDate, comment,
 				3, GroupType.ALTERNATIVE, harddriveGroupName, MemberType.SUB_GROUP,
 				"hard drive sub bom", 4, 4);
 
@@ -452,21 +452,21 @@ public class HyveProductGroupLogTest {
 		cables.deleteGroupDetail(entryID, entryDate, entryComment, lineNo);
 	}
 
-	private void printGroupDetails(String comment, SortedSet<HyveProductGroupMember> details) {
+	private void printGroupDetails(String comment, SortedSet<ProductGroupMember> details) {
 		System.out.println("-----------------Comment:" + comment + "-----------------------");
-		for (HyveProductGroupMember detail:details) {
+		for (ProductGroupMember detail:details) {
 			System.out.println(detail);
 		}
 	}
 	
-	private void printDetailLogs(HyveProductGroupLog groupLog) {
+	private void printDetailLogs(ProductGroupLog groupLog) {
 		System.out.println("------------------Member Log-------------------------");
 		for (String detailLog:groupLog.getDetailLogs()) {
 			System.out.println("[MEMBER_LOG]:" + detailLog);
 		}
 	}
 	
-	private void printTagLogs(HyveProductGroupLog groupLog) {
+	private void printTagLogs(ProductGroupLog groupLog) {
 		System.out.println("------------------Tag Log-------------------------");
 		for (String tagLog:groupLog.getTagLogs()) {
 			System.out.println("[TAG_LOG]:" + tagLog);
@@ -476,7 +476,7 @@ public class HyveProductGroupLogTest {
 	@Test
 	public void testAltCables() throws ParseException {
 		String comment;
-		SortedSet<HyveProductGroupMember> details;
+		SortedSet<ProductGroupMember> details;
 		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		Calendar cal = Calendar.getInstance();
 		Date date1 = sdf.parse("01/01/2014");
@@ -554,10 +554,10 @@ public class HyveProductGroupLogTest {
 		printTagLogs(cables);
 	}
 
-	private int getLine(SortedSet<HyveProductGroupMember> details, int skuNo) {
+	private int getLine(SortedSet<ProductGroupMember> details, int skuNo) {
 		int lineNo;
 		lineNo = 0;
-		for (HyveProductGroupMember detail:details) {
+		for (ProductGroupMember detail:details) {
 				if (detail.getSkuNo() == skuNo) {
 					lineNo = detail.getLineNo();
 					break;
@@ -566,11 +566,11 @@ public class HyveProductGroupLogTest {
 		return lineNo;
 	}
 	
-	private int getLineNo(SortedSet<HyveProductGroupMember> details,
-			HyveProductGroup detailGroup) {
+	private int getLineNo(SortedSet<ProductGroupMember> details,
+			ProductGroup detailGroup) {
 		int lineNo;
 		lineNo = 0;
-		for (HyveProductGroupMember detail:details) {
+		for (ProductGroupMember detail:details) {
 			if (detail.getSubGroupID() != null  && detail.getSubGroupID().equals(detailGroup.getGroupID())) {
 				lineNo = detail.getLineNo();
 				break;

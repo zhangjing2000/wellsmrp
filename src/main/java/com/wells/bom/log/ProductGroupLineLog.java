@@ -3,10 +3,10 @@ package com.wells.bom.log;
 import java.util.Date;
 import java.util.UUID;
 
-import com.wells.bom.concept.HyveProductGroupMember;
+import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.MemberType;
 
-class HyveGroupLineLog extends HyveGroupChangeLog {
+class ProductGroupLineLog extends ProductGroupChangeLog {
 	/**
 	 * 
 	 */
@@ -19,7 +19,7 @@ class HyveGroupLineLog extends HyveGroupChangeLog {
 	private int minBOMQty;
 	private int maxBOMQty;
 	
-	HyveGroupLineLog(UUID logGroupID,  int logUserID, Date logDate,
+	ProductGroupLineLog(UUID logGroupID,  int logUserID, Date logDate,
 			GroupChangeLogType logType, String logComment,
 			int line, MemberType logMemberType, String lineComment,
 			UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty) {
@@ -74,7 +74,7 @@ class HyveGroupLineLog extends HyveGroupChangeLog {
 			.toString();
 	}
 	
-	HyveProductGroupMember toHyveGroupProductDetail() {
-		return new HyveProductGroupMember(getLogGroupID(), line, lineComment, logMemberType, subGroupID, skuNo, minBOMQty, maxBOMQty);
+	ProductGroupMember toProductGroupDetail() {
+		return new ProductGroupMember(getLogGroupID(), line, lineComment, logMemberType, subGroupID, skuNo, minBOMQty, maxBOMQty);
 	}
 }

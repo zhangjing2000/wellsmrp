@@ -11,22 +11,22 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.HyveProductGroupMember;
+import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.MemberType;
 import com.wells.bom.concept.TagType;
 import com.wells.bom.log.exception.InvalidGroupTypeException;
 import com.wells.bom.log.exception.NullGroupTypeException;
 
-public class HyveProductGroupLog implements LoggedHyveProductGroup {
+public class ProductGroupLog implements LoggedProductGroup {
 
 	private final UUID groupID;
-	private final SortedSet<HyveGroupLineLog> lines;
-	private final SortedSet<HyveGroupTagLog> tags;
+	private final SortedSet<ProductGroupLineLog> lines;
+	private final SortedSet<ProductGroupTagLog> tags;
 	
-	public HyveProductGroupLog(int entryID, Date entryDate, String comment, GroupType groupType, String groupName) {
+	public ProductGroupLog(int entryID, Date entryDate, String comment, GroupType groupType, String groupName) {
 		this.groupID = UUID.randomUUID();
-		lines = new TreeSet<HyveGroupLineLog>();
-		tags = new TreeSet<HyveGroupTagLog>();
+		lines = new TreeSet<ProductGroupLineLog>();
+		tags = new TreeSet<ProductGroupTagLog>();
 		addTag(TagType.NEW_GROUP, groupID.toString(), entryID, entryDate, comment);
 		setGroupType(groupType, entryID, entryDate, comment);
 		setGroupName(groupName, entryID, entryDate, comment);
@@ -45,28 +45,28 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 		return GroupType.valueOf(getTagValue(TagType.GROUP_TYPE));
 	}
 
-	public SortedSet<HyveProductGroupMember> getGroupDetails() {
+	public SortedSet<ProductGroupMember> getGroupDetails() {
 		return getGroupDetailsAtGivenTime(null);
 	}
 
-	public SortedSet<HyveProductGroupMember> getGroupDetailsAtGivenTime(Date timeStamp) {
-		Map<Integer, HyveProductGroupMember> map = new HashMap<Integer, HyveProductGroupMember>();
-		for (HyveGroupLineLog log: lines) {
+	public SortedSet<ProductGroupMember> getGroupDetailsAtGivenTime(Date timeStamp) {
+		Map<Integer, ProductGroupMember> map = new HashMap<Integer, ProductGroupMember>();
+		for (ProductGroupLineLog log: lines) {
 			if (timeStamp != null && log.getLogDate().after(timeStamp)) break;
 			if (log.getLogType() == GroupChangeLogType.DELETE_GROUP_LINE) {
 				map.remove(log.getLine());
 			} else { 
-				map.put(log.getLine(), log.toHyveGroupProductDetail());
+				map.put(log.getLine(), log.toProductGroupDetail());
 			}
 		}
-		Comparator<HyveProductGroupMember> detailComparator = new Comparator<HyveProductGroupMember>() {
+		Comparator<ProductGroupMember> detailComparator = new Comparator<ProductGroupMember>() {
 				
-				public int compare(HyveProductGroupMember d1,
-						HyveProductGroupMember d2) {
+				public int compare(ProductGroupMember d1,
+						ProductGroupMember d2) {
 					return d1.getLineNo() - d2.getLineNo();
 				}
 			};
-		TreeSet<HyveProductGroupMember> result = new TreeSet<HyveProductGroupMember>(detailComparator);
+		TreeSet<ProductGroupMember> result = new TreeSet<ProductGroupMember>(detailComparator);
 		result.addAll(map.values());
 		return result;
 	}
@@ -81,7 +81,7 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 	
 	public String getTagValueAtGivenTime(TagType tagType, Date timeStamp) {
 		String returnValue = null;
-		for (HyveGroupTagLog tagLog: tags) {
+		for (ProductGroupTagLog tagLog: tags) {
 			if (timeStamp!= null && tagLog.getLogDate().after(timeStamp)) break;
 			if (tagLog.getTagType() != tagType) continue;
 			if (tagLog.getLogType() == GroupChangeLogType.NEW_TAG) {
@@ -95,7 +95,7 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 	
 	public Map<TagType, String> getGroupTagsAtGivenTime(Date timeStamp) {
 		Map<TagType, String> map = new HashMap<TagType, String>();
-		for (HyveGroupTagLog tagLog: tags) {
+		for (ProductGroupTagLog tagLog: tags) {
 			if (timeStamp!= null && tagLog.getLogDate().after(timeStamp)) break;
 			if (tagLog.getLogType() == GroupChangeLogType.NEW_TAG) {
 				map.put(tagLog.getTagType(), tagLog.getTagValue());
@@ -106,15 +106,15 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 		return map;
 	}
 	
-	public SortedSet<HyveProductGroupMember> getGroupDetailsWithGivenTag(TagType tagType, String tagValue) {
+	public SortedSet<ProductGroupMember> getGroupDetailsWithGivenTag(TagType tagType, String tagValue) {
 		return getGroupDetailsWithGivenTimeAndTag(null, tagType, tagValue);
 	}
 	
-	public SortedSet<HyveProductGroupMember> getGroupDetailsWithGivenTimeAndTag(Date timeStamp, 
+	public SortedSet<ProductGroupMember> getGroupDetailsWithGivenTimeAndTag(Date timeStamp, 
 			TagType tagType, String tagValue) {
 		// find tag time before timestamp
 		Date tagTime = null; 
-		for (HyveGroupTagLog tagLog: tags) {
+		for (ProductGroupTagLog tagLog: tags) {
 			if (timeStamp != null && tagLog.getLogDate().after(timeStamp)) break;
 			if (tagLog.getTagType() != tagType) continue;
 			if (!tagLog.getTagValue().equals(tagValue)) continue;
@@ -127,7 +127,7 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 		
 		if (tagTime == null) {
 			// no tag with given type and value found, return an empty result
-			return new TreeSet<HyveProductGroupMember>();
+			return new TreeSet<ProductGroupMember>();
 		} else {
 			return getGroupDetailsAtGivenTime(tagTime);
 		}
@@ -155,12 +155,12 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 			UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty) {
 		boolean isInsert = true;
 	
-		SortedSet<HyveProductGroupMember> currentDetails = getGroupDetails();
+		SortedSet<ProductGroupMember> currentDetails = getGroupDetails();
 		if (currentDetails.isEmpty()) {
 			if (lineNo<= 0) lineNo = 1;
 			isInsert = false;
 		} else {
-			HyveProductGroupMember lastLine = currentDetails.last();
+			ProductGroupMember lastLine = currentDetails.last();
 			if (lineNo == 0) {
 				lineNo = lastLine.getLineNo() + 1;
 				isInsert = false;
@@ -168,7 +168,7 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 				isInsert = false;
 			}
 		}
-		HyveGroupLineLog log = new HyveGroupLineLog(groupID, entryID, entryDate,
+		ProductGroupLineLog log = new ProductGroupLineLog(groupID, entryID, entryDate,
 				isInsert?GroupChangeLogType.UPDATE_GROUP_LINE:GroupChangeLogType.NEW_GROUP_LINE, 
 				comment,
 				lineNo, logMemberType, lineComment,
@@ -176,11 +176,11 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 		addGroupDetail(log);
 		if (!isInsert) return;
 		int insertLineNo = lineNo;
-		for (HyveProductGroupMember detail: currentDetails) {
+		for (ProductGroupMember detail: currentDetails) {
 			if (detail.getLineNo() < insertLineNo) continue;
 			if (detail.getLineNo() == insertLineNo) {
 				insertLineNo++;
-				log = new HyveGroupLineLog(groupID,  entryID, entryDate,
+				log = new ProductGroupLineLog(groupID,  entryID, entryDate,
 						GroupChangeLogType.UPDATE_GROUP_LINE, comment,
 						insertLineNo, 
 						detail.getMemberType(), 
@@ -197,7 +197,7 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 	
 	public void updateGroupDetail(int entryID, Date entryDate, String comment, int line, MemberType logMemberType, String lineComment,
 			UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty) {
-		HyveGroupLineLog log = new HyveGroupLineLog(groupID,  entryID, entryDate,
+		ProductGroupLineLog log = new ProductGroupLineLog(groupID,  entryID, entryDate,
 			GroupChangeLogType.UPDATE_GROUP_LINE, comment,
 			line, logMemberType, lineComment,
 			subGroupID, skuNo, minBOMQty, maxBOMQty);
@@ -205,14 +205,14 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 	}
 	
 	public void deleteGroupDetail(int entryID, Date entryDate, String comment, int line) {
-		HyveGroupLineLog log = new HyveGroupLineLog(groupID,  entryID, entryDate,
+		ProductGroupLineLog log = new ProductGroupLineLog(groupID,  entryID, entryDate,
 			GroupChangeLogType.DELETE_GROUP_LINE, comment,
 			line, null, null,
 			null, 0, 0, 0);
 		addGroupDetail(log);
 	}
 	
-	private void addGroupDetail(HyveGroupLineLog lineLog) {
+	private void addGroupDetail(ProductGroupLineLog lineLog) {
 		lines.add(lineLog);
 	}
 	
@@ -227,7 +227,7 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 	
 	/*
 	private void checkRevision(String revision) {
-		for (HyveGroupTagLog tagLog: tags) {
+		for (GroupTagLog tagLog: tags) {
 			//if (tagLog.getTagType() != TagType.REVISION) continue;
 			if (tagLog.getTagValue().equals(revision)) throw new UpdateRevisionException("cannot add an exisitng revision");
 		}
@@ -242,19 +242,19 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 			checkRevision(tagValue);
 		}
 		*/
-		HyveGroupTagLog tagLog = new HyveGroupTagLog(groupID, entryID, entryDate, GroupChangeLogType.NEW_TAG, comment, tagType, tagValue);
+		ProductGroupTagLog tagLog = new ProductGroupTagLog(groupID, entryID, entryDate, GroupChangeLogType.NEW_TAG, comment, tagType, tagValue);
 		tags.add(tagLog);
 	}
 
 	public void deleteTag(TagType tagType, int entryID, Date entryDate, String comment) {
 		//if (tagType == TagType.REVISION) throw new UpdateRevisionException("cannot remove an revision");
-		HyveGroupTagLog tagLog = new HyveGroupTagLog(groupID, entryID, entryDate, GroupChangeLogType.DELETE_TAG, comment, tagType, null);
+		ProductGroupTagLog tagLog = new ProductGroupTagLog(groupID, entryID, entryDate, GroupChangeLogType.DELETE_TAG, comment, tagType, null);
 		tags.add(tagLog);
 	}
 	
 	public List<String> getDetailLogs() {
 		List<String> logs = new ArrayList<String>();
-		for (HyveGroupLineLog lineLog: lines) {
+		for (ProductGroupLineLog lineLog: lines) {
 			logs.add(lineLog.toString());
 		}
 		return logs;
@@ -262,7 +262,7 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 
 	public List<String> getTagLogs() {
 		List<String> logs = new ArrayList<String>();
-		for (HyveGroupTagLog tagLog: tags) {
+		for (ProductGroupTagLog tagLog: tags) {
 			logs.add(tagLog.toString());
 		}
 		return logs;
@@ -271,7 +271,7 @@ public class HyveProductGroupLog implements LoggedHyveProductGroup {
 	@Override
 	public Date getRevisonDate(String revision) {
 		Date tagTime = null;
-		for (HyveGroupTagLog tagLog: tags) {
+		for (GroupTagLog tagLog: tags) {
 			if (tagLog.getTagType() != TagType.REVISION) continue;
 			if (!tagLog.getTagValue().equals(revision)) continue;
 			if (tagLog.getLogType() == GroupChangeLogType.NEW_TAG) {

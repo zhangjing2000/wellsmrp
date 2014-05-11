@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.wells.bom.concept.HyveProductGroupMember;
+import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.MemberType;
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntry;
 
 public class FixedPlanEntry implements PlanEntry {
@@ -18,16 +18,16 @@ public class FixedPlanEntry implements PlanEntry {
 	private final UUID groupID;
 	private final int skuNo;
 	private final Date planDate;
-	private final HyvePlant planLocation;
+	private final ProductionPlant planLocation;
 	private int bomQty;
 	
-	public FixedPlanEntry(HyveProductGroupMember planItem, FixedPlanEntry fulfilledParent, Date planDate, HyvePlant planLocation) {
+	public FixedPlanEntry(ProductGroupMember planItem, FixedPlanEntry fulfilledParent, Date planDate, ProductionPlant planLocation) {
 		this(planItem.getMemberType(), fulfilledParent, planItem.getSubGroupID(), 
 				planItem.getSkuNo(), planDate, planItem.getMinBOMQty(), planLocation);
 	}
 
 	public FixedPlanEntry(MemberType itemType, FixedPlanEntry fulfilledParent, UUID groupID,
-			int skuNo, Date planDate, int bomQty, HyvePlant planLocation) {
+			int skuNo, Date planDate, int bomQty, ProductionPlant planLocation) {
 		super();
 		this.itemType = itemType;
 		this.parent = fulfilledParent;
@@ -60,7 +60,7 @@ public class FixedPlanEntry implements PlanEntry {
 	public Date getPlanDate() {
 		return planDate;
 	}
-	public HyvePlant getPlanLocation() {
+	public ProductionPlant getPlanLocation() {
 		return planLocation;
 	} 
 	public int getBomQty() {

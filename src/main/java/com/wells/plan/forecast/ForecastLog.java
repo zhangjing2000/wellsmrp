@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.wells.log.common.LogEntry;
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntryLog;
 import com.wells.plan.concept.PlanEntryLogType;
 
@@ -21,7 +21,7 @@ public class ForecastLog extends ForecastEntry implements PlanEntryLog<ForecastE
 				forecastEntry.getPlanQty(), forecastEntry.getCustBOM(), 
 				logEntry.getLogUserID(), logEntry.getLogDate(), logEntry.getLogComment());
 	}
-	public ForecastLog(PlanEntryLogType logType, Date shipDate, HyvePlant plant, int shipQty,
+	public ForecastLog(PlanEntryLogType logType, Date shipDate, ProductionPlant plant, int shipQty,
 			UUID custBOM, int logUserID, Date logDate, String logComment) {
 		super(shipDate, plant, shipQty, custBOM);
 		this.logID = UUID.randomUUID();

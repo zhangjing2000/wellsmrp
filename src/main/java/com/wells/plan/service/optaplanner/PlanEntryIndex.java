@@ -2,19 +2,19 @@ package com.wells.plan.service.optaplanner;
 
 import java.util.Date;
 
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 
 public class PlanEntryIndex {
-	private final HyvePlant planLocation;
+	private final ProductionPlant planLocation;
 	private final Date planDate; 
 	private final int skuNo;
-	public PlanEntryIndex(HyvePlant planLocation, Date planDate, int skuNo) {
+	public PlanEntryIndex(ProductionPlant planLocation, Date planDate, int skuNo) {
 		super();
 		this.planLocation = planLocation;
 		this.planDate = planDate;
 		this.skuNo = skuNo;
 	}
-	public HyvePlant getPlanLocation() {
+	public ProductionPlant getPlanLocation() {
 		return planLocation;
 	}
 	public Date getPlanDate() {

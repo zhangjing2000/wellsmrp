@@ -3,9 +3,9 @@ package com.wells.bom.snapshot;
 import java.util.Date;
 import java.util.UUID;
 
-import com.wells.bom.concept.HyveProductGroup;
+import com.wells.bom.concept.ProductGroup;
 
-public interface SnapshotedHyveProductGroup extends HyveProductGroup {
+public interface SnapshotedProductGroup extends ProductGroup {
 	UUID getLoggedGroupID();
 	Date getSnapshotDateTime();
 }

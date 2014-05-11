@@ -11,7 +11,7 @@
 
   <scoreDirectorFactory>
     <scoreDefinitionType>HARD_SOFT</scoreDefinitionType>
-    <simpleScoreCalculatorClass>com.wells.plan.service.optaplanner.HyveMPSReadinessScoreCalculator</simpleScoreCalculatorClass>
+    <simpleScoreCalculatorClass>com.wells.plan.service.optaplanner.MPSReadinessScoreCalculator</simpleScoreCalculatorClass>
     <!--<scoreDrl>/org/optaplanner/examples/cloudbalancing/solver/cloudBalancingScoreRules.drl</scoreDrl>-->
   </scoreDirectorFactory>
 

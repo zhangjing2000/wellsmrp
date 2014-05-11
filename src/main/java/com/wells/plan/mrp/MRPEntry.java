@@ -2,16 +2,16 @@ package com.wells.plan.mrp;
 
 import java.util.Date;
 
-import com.wells.plan.concept.HyvePlant;
+import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntry;
 
 public class MRPEntry implements PlanEntry {
 	private final Date planRecDate;
-	private final HyvePlant planLocation;
+	private final ProductionPlant planLocation;
 	private final int planRecQty;
 	private final int skuNo;
 	
-	public MRPEntry(Date startDate, HyvePlant plantLocNo, int deliveryQty,
+	public MRPEntry(Date startDate, ProductionPlant plantLocNo, int deliveryQty,
 			int skuNo) {
 		super();
 		this.planRecDate = startDate;
@@ -23,7 +23,7 @@ public class MRPEntry implements PlanEntry {
 	public Date getPlanDate() {
 		return planRecDate;
 	}
-	public HyvePlant getPlanLocation() {
+	public ProductionPlant getPlanLocation() {
 		return planLocation;
 	}
 	public int getPlanQty() {
