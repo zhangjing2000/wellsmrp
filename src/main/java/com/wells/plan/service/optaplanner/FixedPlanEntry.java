@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.wells.bom.concept.ProductGroupMember;
-import com.wells.bom.concept.MemberType;
+import com.wells.part.concept.MemberType;
+import com.wells.part.concept.Part;
+import com.wells.part.concept.PartRef;
+import com.wells.part.concept.ProductGroupMember;
 import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntry;
 
@@ -15,24 +17,22 @@ public class FixedPlanEntry implements PlanEntry {
 	private final MemberType itemType;
 	private final FixedPlanEntry parent;
 	private final List<FixedPlanEntry> children;
-	private final UUID groupID;
-	private final int skuNo;
+	private final UUID itemID;
 	private final Date planDate;
 	private final ProductionPlant planLocation;
 	private int bomQty;
 	
 	public FixedPlanEntry(ProductGroupMember planItem, FixedPlanEntry fulfilledParent, Date planDate, ProductionPlant planLocation) {
-		this(planItem.getMemberType(), fulfilledParent, planItem.getSubGroupID(), 
-				planItem.getSkuNo(), planDate, planItem.getMinBOMQty(), planLocation);
+		this(planItem.getMemberType(), fulfilledParent, planItem.getMemberID(), 
+				planDate, planItem.getMinBOMQty(), planLocation);
 	}
 
-	public FixedPlanEntry(MemberType itemType, FixedPlanEntry fulfilledParent, UUID groupID,
-			int skuNo, Date planDate, int bomQty, ProductionPlant planLocation) {
+	public FixedPlanEntry(MemberType itemType, FixedPlanEntry fulfilledParent, UUID itemID,
+			Date planDate, int bomQty, ProductionPlant planLocation) {
 		super();
 		this.itemType = itemType;
 		this.parent = fulfilledParent;
-		this.groupID = groupID;
-		this.skuNo = skuNo;
+		this.itemID = itemID;
 		this.planDate = planDate;
 		this.bomQty = bomQty;
 		this.planLocation = planLocation;
@@ -51,11 +51,8 @@ public class FixedPlanEntry implements PlanEntry {
 		return children;
 	}
 	
-	public UUID getGroupID() {
-		return groupID;
-	}
-	public int getSkuNo() {
-		return skuNo;
+	public UUID getItemID() {
+		return itemID;
 	}
 	public Date getPlanDate() {
 		return planDate;
@@ -72,12 +69,15 @@ public class FixedPlanEntry implements PlanEntry {
 	public int getFulfilledQty() {
 		return getBomQty();
 	}
+	public Part getPlanPart() {
+		return new PartRef(itemID);
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((groupID == null) ? 0 : groupID.hashCode());
+		result = prime * result + ((itemID == null) ? 0 : itemID.hashCode());
 		result = prime * result
 				+ ((itemType == null) ? 0 : itemType.hashCode());
 		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
@@ -85,7 +85,6 @@ public class FixedPlanEntry implements PlanEntry {
 				+ ((planDate == null) ? 0 : planDate.hashCode());
 		result = prime * result
 				+ ((planLocation == null) ? 0 : planLocation.hashCode());
-		result = prime * result + skuNo;
 		return result;
 	}
 
@@ -98,10 +97,10 @@ public class FixedPlanEntry implements PlanEntry {
 		if (getClass() != obj.getClass())
 			return false;
 		FixedPlanEntry other = (FixedPlanEntry) obj;
-		if (groupID == null) {
-			if (other.groupID != null)
+		if (itemID == null) {
+			if (other.itemID != null)
 				return false;
-		} else if (!groupID.equals(other.groupID))
+		} else if (!itemID.equals(other.itemID))
 			return false;
 		if (itemType != other.itemType)
 			return false;
@@ -120,17 +119,15 @@ public class FixedPlanEntry implements PlanEntry {
 				return false;
 		} else if (!planLocation.equals(other.planLocation))
 			return false;
-		if (skuNo != other.skuNo)
-			return false;
 		return true;
 	}
 
 	
 	@Override
 	public String toString() {
-		return "FixedPlanEntry [itemType=" + itemType + ", parent="  + (parent==null?"Null":parent.groupID)
-				+ ", children=" + children + ", groupID=" + groupID
-				+ ", skuNo=" + skuNo + ", planDate=" + planDate
+		return "FixedPlanEntry [itemType=" + itemType + ", parent="  + (parent==null?"Null":parent.itemID)
+				+ ", children=" + children + ", itemID=" + itemID
+				+ ", planDate=" + planDate
 				+ ", planLocation=" + planLocation 
 				+ ", bomQty=" + bomQty
 				+ ", planQty=" + getPlanQty()

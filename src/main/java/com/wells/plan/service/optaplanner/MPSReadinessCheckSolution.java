@@ -13,11 +13,11 @@ import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.impl.solution.Solution;
 
-import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.ProductGroup;
-import com.wells.bom.concept.ProductGroupMember;
-import com.wells.bom.concept.MemberType;
 import com.wells.bom.service.ProductGroupService;
+import com.wells.part.concept.GroupType;
+import com.wells.part.concept.MemberType;
+import com.wells.part.concept.ProductGroup;
+import com.wells.part.concept.ProductGroupMember;
 import com.wells.plan.concept.ContractPlan;
 import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.mps.MPSEntry;
@@ -52,8 +52,8 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 	
 	private void explodeMPS() {
 		for (MPSEntry mpsEntry:mps.getLatestPlan()) {
-			FixedPlanEntry fixedPlanEntry = new FixedPlanEntry(MemberType.SUB_GROUP, null, mpsEntry.getCustBOM(), 0, 
-									mpsEntry.getPlanDate(), mpsEntry.getPlanQty(), mpsEntry.getPlanLocation());
+			FixedPlanEntry fixedPlanEntry = new FixedPlanEntry(MemberType.SUB_GROUP, null, mpsEntry.getCustBOM(), 
+					mpsEntry.getPlanDate(), mpsEntry.getPlanQty(), mpsEntry.getPlanLocation());
 			explodeFixedPlanEntry(fixedPlanEntry);
 		}
 	}
@@ -77,8 +77,8 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 		if (!fulfilledByDate.contains(fixedPlanEntry)) {
 			fulfilledByDate.add(fixedPlanEntry);
 		}
-		UUID groupID = fixedPlanEntry.getGroupID();
-		if (groupID == null) return;
+		if (fixedPlanEntry.getItemType() == MemberType.MATERIAL) return;
+		UUID groupID = fixedPlanEntry.getItemID();
 		ProductGroup group = bomService.getProductGroupSnapshot(groupID);
 		int groupSize = group.getGroupDetails().size();
 		int i=0;
@@ -106,7 +106,7 @@ public class MPSReadinessCheckSolution implements Solution<HardSoftScore> {
 			if (accEntry == null) {
 				accEntry = entry;
 			} else {
-				accEntry = new MRPEntry(idx.getPlanDate(), idx.getPlanLocation(), idx.getSkuNo(), entry.getPlanQty() + accEntry.getPlanQty());
+				accEntry = new MRPEntry(idx.getPlanDate(), idx.getPlanLocation(),  entry.getPlanQty() + accEntry.getPlanQty(), idx.getSkuNo());
 			}
 			accumulatedMRP.put(idx, entry);
 		}

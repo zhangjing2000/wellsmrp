@@ -1,7 +1,10 @@
 package com.wells.plan.mrp;
 
 import java.util.Date;
+import java.util.UUID;
 
+import com.wells.part.concept.Part;
+import com.wells.part.concept.PartRef;
 import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntry;
 
@@ -9,10 +12,10 @@ public class MRPEntry implements PlanEntry {
 	private final Date planRecDate;
 	private final ProductionPlant planLocation;
 	private final int planRecQty;
-	private final int skuNo;
+	private final UUID skuNo;
 	
 	public MRPEntry(Date startDate, ProductionPlant plantLocNo, int deliveryQty,
-			int skuNo) {
+			UUID skuNo) {
 		super();
 		this.planRecDate = startDate;
 		this.planLocation = plantLocNo;
@@ -29,15 +32,18 @@ public class MRPEntry implements PlanEntry {
 	public int getPlanQty() {
 		return planRecQty;
 	}
-	public int getSkuNo() {
+	public UUID getSkuNo() {
 		return skuNo;
+	}
+	public Part getPlanPart() {
+		return new PartRef(skuNo);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + skuNo;
+		result = prime * result + skuNo.hashCode();
 		result = prime * result
 				+ ((planRecDate == null) ? 0 : planRecDate.hashCode());
 		result = prime * result + planLocation.getLocNo();
@@ -53,7 +59,7 @@ public class MRPEntry implements PlanEntry {
 		if (getClass() != obj.getClass())
 			return false;
 		MRPEntry other = (MRPEntry) obj;
-		if (skuNo != other.skuNo)
+		if (skuNo.equals(other.skuNo))
 			return false;
 		if (planRecDate == null) {
 			if (other.planRecDate != null)

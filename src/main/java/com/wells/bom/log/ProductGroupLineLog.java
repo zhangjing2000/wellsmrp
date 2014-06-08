@@ -3,8 +3,8 @@ package com.wells.bom.log;
 import java.util.Date;
 import java.util.UUID;
 
-import com.wells.bom.concept.ProductGroupMember;
-import com.wells.bom.concept.MemberType;
+import com.wells.part.concept.MemberType;
+import com.wells.part.concept.ProductGroupMember;
 
 class ProductGroupLineLog extends ProductGroupChangeLog {
 	/**
@@ -14,21 +14,19 @@ class ProductGroupLineLog extends ProductGroupChangeLog {
 	private int line;
 	private MemberType logMemberType;
 	private String lineComment;
-	private UUID subGroupID;
-	private int skuNo;
+	private UUID memberID;
 	private int minBOMQty;
 	private int maxBOMQty;
 	
 	ProductGroupLineLog(UUID logGroupID,  int logUserID, Date logDate,
 			GroupChangeLogType logType, String logComment,
 			int line, MemberType logMemberType, String lineComment,
-			UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty) {
+			UUID memberID, int minBOMQty, int maxBOMQty) {
 		super(logGroupID, logUserID, logDate, logType, logComment);
 		this.line = line;
 		this.logMemberType = logMemberType;
 		this.lineComment = lineComment;
-		this.subGroupID = subGroupID;
-		this.skuNo = skuNo;
+		this.memberID = memberID;
 		this.minBOMQty = minBOMQty;
 		this.maxBOMQty = maxBOMQty;
 	}
@@ -45,11 +43,7 @@ class ProductGroupLineLog extends ProductGroupChangeLog {
 	}
 	
 	UUID getSubGroupID() {
-		return subGroupID;
-	}
-	
-	int getSkuNo() {
-		return skuNo;
+		return memberID;
 	}
 	
 	int getMinBOMQty() {
@@ -67,14 +61,13 @@ class ProductGroupLineLog extends ProductGroupChangeLog {
 			.append(",line#:").append(line)
 			.append(",memberType:").append(logMemberType)
 			.append(",lineComment:").append(lineComment)
-			.append(",sub group:").append(subGroupID)
-			.append(",sku_no:").append(skuNo)
-			.append(",min_BOM_qty:").append(minBOMQty)
-			.append(",max_BOM_qty:").append(maxBOMQty)
+			.append(",memberID:").append(memberID)
+			.append(",minBOMQty:").append(minBOMQty)
+			.append(",maxBOMQty:").append(maxBOMQty)
 			.toString();
 	}
 	
 	ProductGroupMember toProductGroupDetail() {
-		return new ProductGroupMember(getLogGroupID(), line, lineComment, logMemberType, subGroupID, skuNo, minBOMQty, maxBOMQty);
+		return new ProductGroupMember(getLogGroupID(), line, lineComment, logMemberType, memberID, minBOMQty, maxBOMQty);
 	}
 }

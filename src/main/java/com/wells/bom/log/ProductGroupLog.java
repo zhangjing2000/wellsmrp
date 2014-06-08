@@ -10,12 +10,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.ProductGroupMember;
-import com.wells.bom.concept.MemberType;
 import com.wells.bom.concept.TagType;
 import com.wells.bom.log.exception.InvalidGroupTypeException;
 import com.wells.bom.log.exception.NullGroupTypeException;
+import com.wells.part.concept.GroupType;
+import com.wells.part.concept.MemberType;
+import com.wells.part.concept.ProductGroupMember;
 
 public class ProductGroupLog implements LoggedProductGroup {
 
@@ -152,7 +152,7 @@ public class ProductGroupLog implements LoggedProductGroup {
 	
 	public void addGroupDetail(int entryID, Date entryDate, String comment, int lineNo, 
 			MemberType logMemberType, String lineComment,
-			UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty) {
+			UUID memberID, int minBOMQty, int maxBOMQty) {
 		boolean isInsert = true;
 	
 		SortedSet<ProductGroupMember> currentDetails = getGroupDetails();
@@ -172,7 +172,7 @@ public class ProductGroupLog implements LoggedProductGroup {
 				isInsert?GroupChangeLogType.UPDATE_GROUP_LINE:GroupChangeLogType.NEW_GROUP_LINE, 
 				comment,
 				lineNo, logMemberType, lineComment,
-				subGroupID, skuNo, minBOMQty, maxBOMQty);
+				memberID, minBOMQty, maxBOMQty);
 		addGroupDetail(log);
 		if (!isInsert) return;
 		int insertLineNo = lineNo;
@@ -185,8 +185,7 @@ public class ProductGroupLog implements LoggedProductGroup {
 						insertLineNo, 
 						detail.getMemberType(), 
 						detail.getLineComment(),
-						detail.getSubGroupID(), 
-						detail.getSkuNo(), 
+						detail.getMemberID(), 
 						detail.getMinBOMQty(), 
 						detail.getMaxBOMQty());
 				addGroupDetail(log);
@@ -196,11 +195,11 @@ public class ProductGroupLog implements LoggedProductGroup {
 	}
 	
 	public void updateGroupDetail(int entryID, Date entryDate, String comment, int line, MemberType logMemberType, String lineComment,
-			UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty) {
+			UUID memberID, int minBOMQty, int maxBOMQty) {
 		ProductGroupLineLog log = new ProductGroupLineLog(groupID,  entryID, entryDate,
 			GroupChangeLogType.UPDATE_GROUP_LINE, comment,
 			line, logMemberType, lineComment,
-			subGroupID, skuNo, minBOMQty, maxBOMQty);
+			memberID, minBOMQty, maxBOMQty);
 		addGroupDetail(log);
 	}
 	
@@ -208,7 +207,7 @@ public class ProductGroupLog implements LoggedProductGroup {
 		ProductGroupLineLog log = new ProductGroupLineLog(groupID,  entryID, entryDate,
 			GroupChangeLogType.DELETE_GROUP_LINE, comment,
 			line, null, null,
-			null, 0, 0, 0);
+			null, 0, 0);
 		addGroupDetail(log);
 	}
 	
@@ -283,4 +282,12 @@ public class ProductGroupLog implements LoggedProductGroup {
 		return tagTime;
 	}
 	*/
+
+	public UUID getPartNo() {
+		return getGroupID();
+	}
+
+	public String getPartDesc() {
+		return getGroupName();
+	}
 }

@@ -1,10 +1,12 @@
-package com.wells.bom.concept;
+package com.wells.part.concept;
 
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.UUID;
 
-public interface ProductGroup {
+import com.wells.bom.concept.TagType;
+
+public interface ProductGroup extends Part {
 	UUID getGroupID();
 	String getGroupName();
 	GroupType getGroupType();

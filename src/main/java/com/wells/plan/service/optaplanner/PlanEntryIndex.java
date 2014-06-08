@@ -1,14 +1,15 @@
 package com.wells.plan.service.optaplanner;
 
 import java.util.Date;
+import java.util.UUID;
 
 import com.wells.plan.concept.ProductionPlant;
 
 public class PlanEntryIndex {
 	private final ProductionPlant planLocation;
 	private final Date planDate; 
-	private final int skuNo;
-	public PlanEntryIndex(ProductionPlant planLocation, Date planDate, int skuNo) {
+	private final UUID skuNo;
+	public PlanEntryIndex(ProductionPlant planLocation, Date planDate, UUID skuNo) {
 		super();
 		this.planLocation = planLocation;
 		this.planDate = planDate;
@@ -20,7 +21,7 @@ public class PlanEntryIndex {
 	public Date getPlanDate() {
 		return planDate;
 	}
-	public int getSkuNo() {
+	public UUID getSkuNo() {
 		return skuNo;
 	}
 	@Override
@@ -31,7 +32,7 @@ public class PlanEntryIndex {
 				+ ((planDate == null) ? 0 : planDate.hashCode());
 		result = prime * result
 				+ ((planLocation == null) ? 0 : planLocation.hashCode());
-		result = prime * result + skuNo;
+		result = prime * result + skuNo.hashCode();
 		return result;
 	}
 	@Override
@@ -53,7 +54,7 @@ public class PlanEntryIndex {
 				return false;
 		} else if (!planLocation.equals(other.planLocation))
 			return false;
-		if (skuNo != other.skuNo)
+		if (skuNo.equals(other.skuNo))
 			return false;
 		return true;
 	}

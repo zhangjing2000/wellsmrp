@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.UUID;
 
-import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.ProductGroup;
-import com.wells.bom.concept.ProductGroupMember;
-import com.wells.bom.concept.MemberType;
 import com.wells.bom.concept.TagType;
+import com.wells.part.concept.GroupType;
+import com.wells.part.concept.MemberType;
+import com.wells.part.concept.ProductGroup;
+import com.wells.part.concept.ProductGroupMember;
 
 public interface LoggedProductGroup extends ProductGroup {
 	SortedSet<ProductGroupMember> getGroupDetailsAtGivenTime(Date timeStamp);	
@@ -28,9 +28,10 @@ public interface LoggedProductGroup extends ProductGroup {
 	
 	void addGroupDetail(int entryID, Date entryDate, String comment, int lineNo, 
 			MemberType logMemberType, String lineComment,
-			UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty);
-	void updateGroupDetail(int entryID, Date entryDate, String comment, int line, MemberType logMemberType, String lineComment,
-			UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty);
+			UUID memberID, int minBOMQty, int maxBOMQty);
+	void updateGroupDetail(int entryID, Date entryDate, String comment, int line, 
+			MemberType logMemberType, String lineComment,
+			UUID memberID, int minBOMQty, int maxBOMQty);
 	void deleteGroupDetail(int entryID, Date entryDate, String comment, int line);
 	
 	void addTag(TagType tagType, String tagValue, int entryID, Date entryDate, String comment);

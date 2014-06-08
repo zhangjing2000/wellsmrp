@@ -7,13 +7,14 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.TagType;
 import com.wells.bom.log.ProductGroupLog;
 import com.wells.bom.log.LoggedProductGroup;
 import com.wells.bom.snapshot.ProductGroupSnapshot;
 import com.wells.bom.snapshot.SnapshotedProductGroup;
+import com.wells.part.concept.GroupType;
+import com.wells.part.concept.MemberType;
+import com.wells.part.concept.ProductGroupMember;
 
 public class ProductGroupServiceImpl implements ProductGroupService {
 
@@ -57,24 +58,26 @@ public class ProductGroupServiceImpl implements ProductGroupService {
 		SortedSet<ProductGroupMember> snapshotDetails = new TreeSet<ProductGroupMember>();
 		for (ProductGroupMember logDetail:logDetails) {
 			ProductGroupMember snapshotDetail = null;
-			UUID logSubGroupID = logDetail.getSubGroupID();
+			UUID logMemberID = logDetail.getMemberID();
 			int minBOMQty = logDetail.getMinBOMQty();
 			int maxBOMQty = logDetail.getMaxBOMQty();
 			UUID snapshotSubGroupID = null;
-			if (logSubGroupID != null) {
+			if (logDetail.getMemberType() == MemberType.SUB_GROUP) {
 				SnapshotedProductGroup subGroupSnapshot = null;
-				snapshotSubGroupID = getSnapshotGroupID(logSubGroupID, snapshotDateTime);
+				snapshotSubGroupID = getSnapshotGroupID(logMemberID, snapshotDateTime);
 				if (snapshotSubGroupID == null) {
-					LoggedProductGroup logSubGroup = groupLogs.get(logSubGroupID);
+					LoggedProductGroup logSubGroup = groupLogs.get(logMemberID);
 					if (logSubGroup == null) 
-						throw new GroupNotFoundException("Group:" + logSubGroupID + " not found");
+						throw new GroupNotFoundException("Group:" + logMemberID + " not found");
 					subGroupSnapshot = createProductGroupSnapshot(logSubGroup, snapshotDateTime);
 					snapshotSubGroupID = subGroupSnapshot.getGroupID();
 				}
+			} else {
+				snapshotSubGroupID = logMemberID;
 			}
 			snapshotDetail = new ProductGroupMember(snapshotGroupID, logDetail.getLineNo(), 
 					logDetail.getLineComment(), logDetail.getMemberType(), 
-					snapshotSubGroupID, logDetail.getSkuNo(), minBOMQty, maxBOMQty);
+					snapshotSubGroupID, minBOMQty, maxBOMQty);
 			if (snapshotDetail != null) snapshotDetails.add(snapshotDetail);
 		}
 		/*

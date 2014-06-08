@@ -3,6 +3,8 @@ package com.wells.plan.forecast;
 import java.util.Date;
 import java.util.UUID;
 
+import com.wells.part.concept.Part;
+import com.wells.part.concept.PartRef;
 import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntry;
 
@@ -29,6 +31,9 @@ public class ForecastEntry implements PlanEntry{
 	}
 	public int getPlanQty() {
 		return shipQty;
+	}
+	public Part getPlanPart() {
+		return new PartRef(custBOM);
 	}
 	public UUID getCustBOM() {
 		return custBOM;
@@ -68,4 +73,5 @@ public class ForecastEntry implements PlanEntry{
 			return false;
 		return true;
 	}
+
 }

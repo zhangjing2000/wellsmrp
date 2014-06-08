@@ -4,11 +4,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.impl.score.director.simple.SimpleScoreCalculator;
 
-import com.wells.bom.concept.MemberType;
+import com.wells.part.concept.MemberType;
 import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.mrp.MRPEntry;
 
@@ -19,22 +20,22 @@ public class MPSReadinessScoreCalculator implements SimpleScoreCalculator<MPSRea
 		int  hardScore = 0, softScore = 0;
 		Map<ProductionPlant, Map<Date, List<FixedPlanEntry>>> fulfilled = solution.getFulfilledMPS();
 		Map<PlanEntryIndex, MRPEntry> mrp = solution.getAccumulatedMRP();
-		Map<ProductionPlant, Map<Date, Map<Integer, Integer>>> aggregatecDemands = aggregateDemands(fulfilled);
-		for (Map.Entry<ProductionPlant, Map<Date, Map<Integer, Integer>>> fulfilledByLocEntry: aggregatecDemands.entrySet()) {
+		Map<ProductionPlant, Map<Date, Map<UUID, Integer>>> aggregatecDemands = aggregateDemands(fulfilled);
+		for (Map.Entry<ProductionPlant, Map<Date, Map<UUID, Integer>>> fulfilledByLocEntry: aggregatecDemands.entrySet()) {
 			ProductionPlant fulfilledLoc = fulfilledByLocEntry.getKey();
-			Map<Date, Map<Integer, Integer>> fulfilledByLoc = fulfilledByLocEntry.getValue();
-			for (Map.Entry<Date, Map<Integer, Integer>> fulfilledByDateEntry: fulfilledByLoc.entrySet()) {
+			Map<Date, Map<UUID, Integer>> fulfilledByLoc = fulfilledByLocEntry.getValue();
+			for (Map.Entry<Date, Map<UUID, Integer>> fulfilledByDateEntry: fulfilledByLoc.entrySet()) {
 				Date fulfilledDate = fulfilledByDateEntry.getKey();
-				Map<Integer, MRPEntry> mrpPlan = findMRPSupportByFulfilledDate(mrp, fulfilledLoc, fulfilledDate);
+				Map<UUID, MRPEntry> mrpPlan = findMRPSupportByFulfilledDate(mrp, fulfilledLoc, fulfilledDate);
 				if (mrpPlan == null) {
 					hardScore = -10;
 					//System.out.println("no mrp plan, date=" + fulfilledDate);
 					break;
 				}
-				Map<Integer, Integer> skuDemands = fulfilledByDateEntry.getValue();
-				for (Map.Entry<Integer, Integer> skuDemand: skuDemands.entrySet()) {
+				Map<UUID, Integer> skuDemands = fulfilledByDateEntry.getValue();
+				for (Map.Entry<UUID, Integer> skuDemand: skuDemands.entrySet()) {
 					System.out.println("skuDemand:" + skuDemand);
-					int skuNo = skuDemand.getKey();
+					UUID skuNo = skuDemand.getKey();
 					int mpsQty = skuDemand.getValue();
 					//System.out.println("calculateScore Called, skuNo=" + skuNo + ",mpsQty =" + mpsQty);
 					if (mpsQty == 0) {
@@ -66,39 +67,39 @@ public class MPSReadinessScoreCalculator implements SimpleScoreCalculator<MPSRea
 		return HardSoftScore.valueOf(hardScore, softScore);
 	}
 	
-	private Map<ProductionPlant, Map<Date, Map<Integer, Integer>>> aggregateDemands(
+	private Map<ProductionPlant, Map<Date, Map<UUID, Integer>>> aggregateDemands(
 			Map<ProductionPlant, Map<Date, List<FixedPlanEntry>>> fulfilled) {
-		Map <ProductionPlant, Map<Date, Map<Integer, Integer>>> demands = new HashMap<ProductionPlant, Map<Date, Map<Integer, Integer>>>();
+		Map <ProductionPlant, Map<Date, Map<UUID, Integer>>> demands = new HashMap<ProductionPlant, Map<Date, Map<UUID, Integer>>>();
 		for (Map.Entry<ProductionPlant, Map<Date, List<FixedPlanEntry>>> fulfilledByLocEntry: fulfilled.entrySet()) {
 			ProductionPlant fulfilledLoc = fulfilledByLocEntry.getKey();
-			Map<Date, Map<Integer, Integer>> demandsByLoc = demands.get(fulfilledLoc);
+			Map<Date, Map<UUID, Integer>> demandsByLoc = demands.get(fulfilledLoc);
 			if (demandsByLoc == null) {
-				demandsByLoc = new HashMap<Date, Map<Integer, Integer>>();
+				demandsByLoc = new HashMap<Date, Map<UUID, Integer>>();
 				demands.put(fulfilledLoc, demandsByLoc);
 			}
 			Map<Date, List<FixedPlanEntry>> fulfilledByLoc = fulfilledByLocEntry.getValue();
 			for (Date fulfillDate : fulfilledByLoc.keySet()) {
-				Map<Integer, Integer> skuDemand = demandsByLoc.get(fulfillDate);
+				Map<UUID, Integer> skuDemand = demandsByLoc.get(fulfillDate);
 				if (skuDemand == null) {
-					skuDemand = new HashMap<Integer, Integer>();
+					skuDemand = new HashMap<UUID, Integer>();
 					demandsByLoc.put(fulfillDate, skuDemand);
 				}
 			}
 		}
-		for (Map.Entry<ProductionPlant, Map<Date, Map<Integer, Integer>>> demandsByLocEntry: demands.entrySet()) {
+		for (Map.Entry<ProductionPlant, Map<Date, Map<UUID, Integer>>> demandsByLocEntry: demands.entrySet()) {
 			ProductionPlant plant = demandsByLocEntry.getKey();
 			Map<Date, List<FixedPlanEntry>> fulfilledByLoc = fulfilled.get(plant);
-			Map<Date, Map<Integer, Integer>> demandsByLoc = demands.get(plant);
-			for (Map.Entry<Date, Map<Integer, Integer>> demandByDate: demandsByLoc.entrySet()) {
+			Map<Date, Map<UUID, Integer>> demandsByLoc = demands.get(plant);
+			for (Map.Entry<Date, Map<UUID, Integer>> demandByDate: demandsByLoc.entrySet()) {
 				Date demandDate = demandByDate.getKey();
-				Map<Integer, Integer> skuDemand = demandByDate.getValue();
+				Map<UUID, Integer> skuDemand = demandByDate.getValue();
 				for (Map.Entry<Date, List<FixedPlanEntry>> fulfilledByDateEntry: fulfilledByLoc.entrySet()) {
 					Date fulfillDate = fulfilledByDateEntry.getKey();
 					if (fulfillDate.after(demandDate)) continue;
 					List<FixedPlanEntry> fulfilledPlan = fulfilledByDateEntry.getValue();
 					for (FixedPlanEntry fixedPlanEntry: fulfilledPlan) {
 						if (fixedPlanEntry.getItemType() == MemberType.MATERIAL) {
-							int skuNo = fixedPlanEntry.getSkuNo();
+							UUID skuNo = fixedPlanEntry.getItemID();
 							Integer planQty = skuDemand.get(skuNo);
 							if (planQty == null) planQty = 0;
 							planQty += fixedPlanEntry.getPlanQty();
@@ -111,9 +112,9 @@ public class MPSReadinessScoreCalculator implements SimpleScoreCalculator<MPSRea
 		return demands;
 	}
 	
-	private Map<Integer, MRPEntry> findMRPSupportByFulfilledDate(
+	private Map<UUID, MRPEntry> findMRPSupportByFulfilledDate(
 			Map<PlanEntryIndex, MRPEntry> mrp, ProductionPlant plant, Date fulfilledDate) {
-		Map<Integer, MRPEntry> mrpSkuMap = new HashMap<Integer, MRPEntry>();
+		Map<UUID, MRPEntry> mrpSkuMap = new HashMap<UUID, MRPEntry>();
 		for (MRPEntry mrpEntry: mrp.values()) {
 			ProductionPlant thisMRPPlant = mrpEntry.getPlanLocation();
 			if (!thisMRPPlant.equals(plant)) continue;

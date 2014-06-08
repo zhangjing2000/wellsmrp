@@ -3,6 +3,8 @@ package com.wells.plan.mps;
 import java.util.Date;
 import java.util.UUID;
 
+import com.wells.part.concept.Part;
+import com.wells.part.concept.PartRef;
 import com.wells.plan.concept.ProductionPlant;
 import com.wells.plan.concept.PlanEntry;
 
@@ -37,6 +39,9 @@ public class MPSEntry implements PlanEntry {
 	}
 	public UUID getCustBOM() {
 		return custBOM;
+	}
+	public Part getPlanPart() {
+		return new PartRef(custBOM);
 	}
 
 	@Override

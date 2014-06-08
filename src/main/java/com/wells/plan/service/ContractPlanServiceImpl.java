@@ -1,5 +1,8 @@
 package com.wells.plan.service;
 
+import java.util.Set;
+
+import com.wells.inventory.concept.InventoryOrder;
 import com.wells.plan.concept.ContractPlan;
 import com.wells.plan.forecast.ForecastEntry;
 import com.wells.plan.mps.MPSEntry;
@@ -22,6 +25,9 @@ public class ContractPlanServiceImpl implements ContractPlanService {
 	public void fromMPStoMRP(ContractPlan<MPSEntry> mps, ContractPlan<MRPEntry> mrp) {
 		// TODO Auto-generated method stub
 		
+	}
+	public boolean isMRPSatisfiedByInventoryOrders(ContractPlan<MRPEntry> mrp, Set<InventoryOrder> orders) {
+		return false;
 	}
 
 }

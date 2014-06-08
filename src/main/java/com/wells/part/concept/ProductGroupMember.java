@@ -1,4 +1,4 @@
-package com.wells.bom.concept;
+package com.wells.part.concept;
 
 import java.util.UUID;
 
@@ -7,20 +7,18 @@ public class ProductGroupMember implements Comparable<ProductGroupMember>{
 	private final int lineNo;
 	private final String lineComment;
 	private final MemberType memberType;
-	private final UUID subGroupID;
-	private final int skuNo;
+	private final UUID memberID;
 	private final int minBOMQty;
 	private final int maxBOMQty;
 	
 	public ProductGroupMember(UUID groupID, int lineNo, String lineComment,
-			MemberType memberType, UUID subGroupID, int skuNo, int minBOMQty, int maxBOMQty) {
+			MemberType memberType, UUID memberID, int minBOMQty, int maxBOMQty) {
 		super();
 		this.groupID = groupID;
 		this.lineNo = lineNo;
 		this.lineComment = lineComment;
 		this.memberType = memberType;
-		this.subGroupID = subGroupID;
-		this.skuNo = skuNo;
+		this.memberID = memberID;
 		this.minBOMQty = minBOMQty;
 		this.maxBOMQty = maxBOMQty;
 	}
@@ -36,11 +34,8 @@ public class ProductGroupMember implements Comparable<ProductGroupMember>{
 	public MemberType getMemberType() {
 		return memberType;
 	}
-	public UUID getSubGroupID() {
-		return subGroupID;
-	}
-	public int getSkuNo() {
-		return skuNo;
+	public UUID getMemberID() {
+		return memberID;
 	}
 	public int getMinBOMQty() {
 		return minBOMQty;
@@ -56,10 +51,9 @@ public class ProductGroupMember implements Comparable<ProductGroupMember>{
 		.append("line#:").append(lineNo)
 		.append(",member type:").append(memberType)
 		.append(",lineComment:").append(lineComment)
-		.append(",sub group:").append(subGroupID)
-		.append(",skuNo:").append(skuNo)
-		.append(",min_BOM_qty:").append(minBOMQty)
-		.append(",max_BOM_qty:").append(maxBOMQty)
+		.append(",member ID:").append(memberID)
+		.append(",min BOM qty:").append(minBOMQty)
+		.append(",max BOM qty:").append(maxBOMQty)
 		.toString();
 	}
 }

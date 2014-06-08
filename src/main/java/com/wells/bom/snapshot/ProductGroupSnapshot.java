@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.UUID;
 
-import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.ProductGroupMember;
 import com.wells.bom.concept.TagType;
+import com.wells.part.concept.GroupType;
+import com.wells.part.concept.ProductGroupMember;
 
 public class ProductGroupSnapshot implements SnapshotedProductGroup {
 
@@ -62,5 +62,13 @@ public class ProductGroupSnapshot implements SnapshotedProductGroup {
 
 	public Date getSnapshotDateTime() {
 		return snapshotDateTime;
+	}
+
+	public UUID getPartNo() {
+		return getGroupID();
+	}
+
+	public String getPartDesc() {
+		return getGroupName();
 	}
 }

@@ -23,7 +23,7 @@ public class MRPEntryLog extends MRPEntry implements PlanEntryLog<MRPEntry> {
 				logEntry.getLogUserID(), logEntry.getLogDate(), logEntry.getLogComment());
 	}
 	public MRPEntryLog(PlanEntryLogType logType, Date startDate, ProductionPlant plant, int deliveryQty,
-			int skuNo, int logUserID, Date logDate, String logComment) {
+			UUID skuNo, int logUserID, Date logDate, String logComment) {
 		super(startDate, plant, deliveryQty, skuNo);
 		this.logID = UUID.randomUUID();
 		this.logType = logType;
