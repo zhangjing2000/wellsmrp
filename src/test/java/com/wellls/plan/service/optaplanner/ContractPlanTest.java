@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,13 +17,13 @@ import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 import org.optaplanner.core.config.solver.XmlSolverFactory;
 
-import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.ProductGroup;
-import com.wells.bom.concept.MemberType;
 import com.wells.bom.log.LoggedProductGroup;
 import com.wells.bom.service.ProductGroupService;
 import com.wells.bom.service.ProductGroupServiceImpl;
 import com.wells.log.common.LogEntry;
+import com.wells.part.concept.GroupType;
+import com.wells.part.concept.MemberType;
+import com.wells.part.concept.ProductGroup;
 import com.wells.plan.concept.ProductionContract;
 import com.wells.plan.concept.ContractPlan;
 import com.wells.plan.concept.ProductionPlant;
@@ -45,18 +46,18 @@ public class ContractPlanTest {
 	private static String cableGroupName = "Cable";
 	private static String powerGroupName = "Power";
 	private static String screwsGroupName = "Screws";
-	private static int processorPart = 100001;
-	private static int harddrivePart = 100002;
-	private static int motherboardPart = 100003;
-	private static int ssdPart = 100004;
-	private static int memoryPart1 = 100005;
-	private static int memoryPart2 = 100006;
-	private static int memoryPart3 = 100007;
-	private static int cableAltPart1 = 100101;
-	private static int cableAltPart2 = 100102;
-	private static int powerPart = 100201;
-	private static int screwAltPart1 = 100301;
-	private static int screwAltPart2 = 100302;
+	private static UUID processorPart = UUID.randomUUID();
+	private static UUID harddrivePart = UUID.randomUUID();
+	private static UUID motherboardPart = UUID.randomUUID();
+	private static UUID ssdPart = UUID.randomUUID();
+	private static UUID memoryPart1 = UUID.randomUUID();
+	private static UUID memoryPart2 = UUID.randomUUID();
+	private static UUID memoryPart3 = UUID.randomUUID();
+	private static UUID cableAltPart1 = UUID.randomUUID();
+	private static UUID cableAltPart2 = UUID.randomUUID();
+	private static UUID powerPart = UUID.randomUUID();
+	private static UUID screwAltPart1 = UUID.randomUUID();
+	private static UUID screwAltPart2 = UUID.randomUUID();
 	private static int entryID = 4739;
 	private static DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	private static Date entryDate; 
@@ -191,12 +192,12 @@ public class ContractPlanTest {
 		return screws;
 	}
 
-	private void addPartToAltGroup(LoggedProductGroup group, String comment, int lineNo,  String lineComment, int skuNo) {
-		group.addGroupDetail(entryID, entryDate, comment, lineNo, MemberType.MATERIAL, lineComment, null, skuNo, 1, 1);
+	private void addPartToAltGroup(LoggedProductGroup group, String comment, int lineNo,  String lineComment, UUID skuNo) {
+		group.addGroupDetail(entryID, entryDate, comment, lineNo, MemberType.MATERIAL, lineComment, skuNo, 1, 1);
 	}
 	
 	private void addSubGroupToBOM(LoggedProductGroup group, String comment, int lineNo,  String lineComment, LoggedProductGroup subGroup, int minBOMQty, int maxBOMQty) {
-		group.addGroupDetail(entryID, entryDate, comment, lineNo, MemberType.SUB_GROUP, lineComment, subGroup.getGroupID(), 0, minBOMQty, maxBOMQty);
+		group.addGroupDetail(entryID, entryDate, comment, lineNo, MemberType.SUB_GROUP, lineComment, subGroup.getGroupID(), minBOMQty, maxBOMQty);
 	}
 	
 	@After
@@ -386,5 +387,24 @@ public class ContractPlanTest {
 		System.out.println("score=" + solvedSolution.getScore().getHardScore());
 		assertTrue(solvedSolution.getScore().getHardScore() > 0);
 	}
+	
+	@Test 
+	public void testUUID() {
+		UUID a = new UUID(12345678, 87654321);
+		UUID b = new UUID(12345678, 87654321);
+		UUID c = new UUID(11111111, 22222222);
+		
+		System.out.println("a=" + a);
+		System.out.println("b=" + b);
+		System.out.println("c=" + c);
 
+		assertTrue(a == a); // returns true
+		assertTrue(a.equals(a)); // returns true
+
+		assertFalse(a == b); // returns false
+		assertTrue(a.equals(b)); // returns true
+
+		assertFalse(a == c); // returns false
+		assertFalse(a.equals(c)); //return false
+	}
 }

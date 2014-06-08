@@ -17,14 +17,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.ProductGroup;
-import com.wells.bom.concept.ProductGroupMember;
-import com.wells.bom.concept.MemberType;
 import com.wells.bom.concept.TagType;
 import com.wells.bom.log.ProductGroupLog;
 import com.wells.bom.log.exception.InvalidGroupTypeException;
 import com.wells.bom.log.exception.NullGroupTypeException;
+import com.wells.part.concept.GroupType;
+import com.wells.part.concept.MemberType;
+import com.wells.part.concept.ProductGroup;
+import com.wells.part.concept.ProductGroupMember;
 
 public class ProductGroupLogTest {
 	
@@ -39,8 +39,8 @@ public class ProductGroupLogTest {
 	private static String processorGroupName = "Processor";
 	private static String memoryGroupName = "Memory";
 	private static String cableGroupName = "Cable";
-	private static int cableAltPart1 = 100101;
-	private static int cableAltPart2 = 100102;
+	private static UUID cableAltPart1 = UUID.randomUUID();
+	private static UUID cableAltPart2 =  UUID.randomUUID();
 	private static int entryID = 4739;
 	private static Date entryDate = new Date();
 	private DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -108,12 +108,12 @@ public class ProductGroupLogTest {
 		entryDate = sdf.parse("01/01/2014");
 		ProductGroupLog ash13Rack = new ProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
 		ash13Rack.addGroupDetail(entryID, entryDate, "test add server", 1, 
-				MemberType.SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
+				MemberType.SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 10, 10);
 		SortedSet<ProductGroupMember> details = ash13Rack.getGroupDetails(); 
 		assertNotNull(details);
 		assertTrue(details.size()==1);
-		assertEquals(ash13Server.getGroupID(), details.first().getSubGroupID());
-		assertEquals(ash13Server.getGroupID(), details.last().getSubGroupID());
+		assertEquals(ash13Server.getGroupID(), details.first().getMemberID());
+		assertEquals(ash13Server.getGroupID(), details.last().getMemberID());
 	}
 
 	@Test
@@ -121,16 +121,16 @@ public class ProductGroupLogTest {
 		entryDate = sdf.parse("01/01/2014");
 		ProductGroupLog ash13Rack = new ProductGroupLog(entryID, entryDate, "Init Rack Test", GroupType.ASSEMBLY, rackGroupName);
 		ash13Rack.addGroupDetail(entryID, entryDate, "test add server", 1, 
-				MemberType.SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
+				MemberType.SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 10, 10);
 		ash13Rack.addGroupDetail(entryID, entryDate, "test add cable", 2, 
-				MemberType.SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 0, 0, 0);
+				MemberType.SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 0, 0);
 		SortedSet<ProductGroupMember> details = ash13Rack.getGroupDetails(); 
 		assertNotNull(details);
 		assertTrue(details.size()==2);
 		System.out.println(details.first().getClass());
-		assertEquals(ash13Server.getGroupID(), details.first().getSubGroupID());
+		assertEquals(ash13Server.getGroupID(), details.first().getMemberID());
 		System.out.println(details.last().getClass());
-		assertEquals(cables.getGroupID(), details.last().getSubGroupID());
+		assertEquals(cables.getGroupID(), details.last().getMemberID());
 	}
 
 	@Test
@@ -144,16 +144,16 @@ public class ProductGroupLogTest {
 		ProductGroupLog ash13Server = new ProductGroupLog(entryID, date2, "Init Test", GroupType.ASSEMBLY, serverGroupName);
 		ProductGroupLog cables = new ProductGroupLog(entryID, date3, "Init Test", GroupType.ALTERNATIVE, cableGroupName);
 		ash13Rack.addGroupDetail(entryID, date2, "test add server", 1, 
-				MemberType.SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 0, 10, 10);
+				MemberType.SUB_GROUP, "ASH 13 server", ash13Server.getGroupID(), 10, 10);
 		ash13Rack.addGroupDetail(entryID, date3, "test add cable", 2, 
-				MemberType.SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 0, 0, 0);
+				MemberType.SUB_GROUP, "ASH 13 cable", cables.getGroupID(), 1, 1);
 		ash13Rack.deleteGroupDetail(entryID, date4, "test remove server", 1);
 
 		SortedSet<ProductGroupMember> details = ash13Rack.getGroupDetails(); 
 		assertNotNull(details);
 		assertTrue(details.size()==1);
 		System.out.println(details.first().getClass());
-		assertEquals(cables.getGroupID(), details.first().getSubGroupID());
+		assertEquals(cables.getGroupID(), details.first().getMemberID());
 
 		SortedSet<ProductGroupMember> detailsAtDate1 = ash13Rack.getGroupDetailsAtGivenTime(date1); 
 		assertNotNull(detailsAtDate1);
@@ -163,22 +163,22 @@ public class ProductGroupLogTest {
 		assertNotNull(detailsAtDate2);
 		assertTrue(detailsAtDate2.size()==1);
 		System.out.println("date 2, first line:" + detailsAtDate2.first().getClass());
-		assertEquals(ash13Server.getGroupID(), detailsAtDate2.first().getSubGroupID());
+		assertEquals(ash13Server.getGroupID(), detailsAtDate2.first().getMemberID());
 
 		SortedSet<ProductGroupMember> detailsAtDate3 = ash13Rack.getGroupDetailsAtGivenTime(date3); 
 		assertNotNull(detailsAtDate3);
 		assertTrue(detailsAtDate3.size()==2);
 		System.out.println("date 3, first line:" + detailsAtDate3.first().getClass());
-		assertEquals(ash13Server.getGroupID(), detailsAtDate3.first().getSubGroupID());
+		assertEquals(ash13Server.getGroupID(), detailsAtDate3.first().getMemberID());
 	
 		System.out.println("date 3, last line:" + detailsAtDate3.last().getClass());
-		assertEquals(cables.getGroupID(), detailsAtDate3.last().getSubGroupID());
+		assertEquals(cables.getGroupID(), detailsAtDate3.last().getMemberID());
 
 		SortedSet<ProductGroupMember> detailsAtDate4 = ash13Rack.getGroupDetailsAtGivenTime(date4); 
 		assertNotNull(detailsAtDate4);
 		assertTrue(detailsAtDate4.size()==1);
 		System.out.println("date 4, first line:" + detailsAtDate4.first().getClass());
-		assertEquals(cables.getGroupID(), detailsAtDate4.first().getSubGroupID());
+		assertEquals(cables.getGroupID(), detailsAtDate4.first().getMemberID());
 }
 
 	@Test
@@ -251,7 +251,7 @@ public class ProductGroupLogTest {
 			String lineComment, int minBOMQty, int maxBOMQty) {
 		ProductGroup prodGroup = new ProductGroupLog(entryID, entryDate, entryComment, groupType, groupName);
 		ash13Server.addGroupDetail(entryID, entryDate, entryComment, 0, memberType, lineComment, 
-				prodGroup.getGroupID(), 0, minBOMQty, maxBOMQty);
+				prodGroup.getGroupID(),minBOMQty, maxBOMQty);
 		return prodGroup;
 	}
 	
@@ -260,7 +260,7 @@ public class ProductGroupLogTest {
 			String lineComment, int minBOMQty, int maxBOMQty) {
 		ProductGroup prodGroup = new ProductGroupLog(entryID, entryDate, entryComment, groupType, groupName);
 		ash13Server.addGroupDetail(entryID, entryDate, entryComment, lineNo, memberType, lineComment, 
-				prodGroup.getGroupID(), lineNo, minBOMQty, maxBOMQty);
+				prodGroup.getGroupID(), minBOMQty, maxBOMQty);
 		return prodGroup;
 	}
 	
@@ -268,7 +268,7 @@ public class ProductGroupLogTest {
 			int lineNo, UUID subGroupID, MemberType memberType, 
 			String lineComment, int minBOMQty, int maxBOMQty) {
 		ash13Server.updateGroupDetail(entryID, entryDate, entryComment, lineNo, memberType, lineComment, 
-				subGroupID, 0, minBOMQty, maxBOMQty);
+				subGroupID, minBOMQty, maxBOMQty);
 	}
 
 	private void deleteGroupDetailFromAshServer(int entryID, Date entryDate, String entryComment, 
@@ -436,18 +436,18 @@ public class ProductGroupLogTest {
 		printTagLogs(ash13Server);
 	}
 
-	private void addGroupDetailToCables(int entryID, Date entryDate, String entryComment, int skuNo) {
+	private void addGroupDetailToCables(int entryID, Date entryDate, String entryComment, UUID skuNo) {
 		cables.addGroupDetail(entryID, entryDate, entryComment, 0, MemberType.MATERIAL, entryComment, 
-				null, skuNo, 1, 1);
+				skuNo, 1, 1);
 	}
 
-	private void updateGroupDetailToCables(int entryID, Date entryDate, String entryComment, int skuNo) {
+	private void updateGroupDetailToCables(int entryID, Date entryDate, String entryComment, UUID skuNo) {
 		int lineNo = getLine(cables.getGroupDetails(), skuNo);
 		cables.updateGroupDetail(entryID, entryDate, entryComment, lineNo, MemberType.MATERIAL, entryComment, 
-				null, skuNo, 1, 1);
+				 skuNo, 1, 1);
 	}
 
-	private void deleteGroupDetailFromCables(int entryID, Date entryDate, String entryComment, int skuNo) {
+	private void deleteGroupDetailFromCables(int entryID, Date entryDate, String entryComment, UUID skuNo) {
 		int lineNo = getLine(cables.getGroupDetails(), skuNo);
 		cables.deleteGroupDetail(entryID, entryDate, entryComment, lineNo);
 	}
@@ -554,11 +554,11 @@ public class ProductGroupLogTest {
 		printTagLogs(cables);
 	}
 
-	private int getLine(SortedSet<ProductGroupMember> details, int skuNo) {
+	private int getLine(SortedSet<ProductGroupMember> details, UUID skuNo) {
 		int lineNo;
 		lineNo = 0;
 		for (ProductGroupMember detail:details) {
-				if (detail.getSkuNo() == skuNo) {
+				if (detail.getMemberID().equals(skuNo)) {
 					lineNo = detail.getLineNo();
 					break;
 				}
@@ -571,7 +571,7 @@ public class ProductGroupLogTest {
 		int lineNo;
 		lineNo = 0;
 		for (ProductGroupMember detail:details) {
-			if (detail.getSubGroupID() != null  && detail.getSubGroupID().equals(detailGroup.getGroupID())) {
+			if (detail.getMemberID() != null  && detail.getMemberID().equals(detailGroup.getGroupID())) {
 				lineNo = detail.getLineNo();
 				break;
 			}

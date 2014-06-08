@@ -15,15 +15,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.wells.bom.concept.GroupType;
-import com.wells.bom.concept.ProductGroup;
-import com.wells.bom.concept.ProductGroupMember;
-import com.wells.bom.concept.MemberType;
 import com.wells.bom.concept.TagType;
 import com.wells.bom.log.LoggedProductGroup;
 import com.wells.bom.service.ProductGroupService;
 import com.wells.bom.service.ProductGroupServiceImpl;
 import com.wells.bom.snapshot.SnapshotedProductGroup;
+import com.wells.part.concept.GroupType;
+import com.wells.part.concept.MemberType;
+import com.wells.part.concept.ProductGroup;
+import com.wells.part.concept.ProductGroupMember;
 
 public class ProductGroupServiceTest {
 	private LoggedProductGroup ash13ServerLog;
@@ -66,7 +66,7 @@ public class ProductGroupServiceTest {
 		int arrayIdx = memberIndex -1;
 		ProductGroupMember subGroupMember = (ProductGroupMember)details.toArray()[arrayIdx];
 		assertEquals(MemberType.SUB_GROUP, subGroupMember.getMemberType());
-		SnapshotedProductGroup snapshotSubGroup = service.getProductGroupSnapshot(subGroupMember.getSubGroupID());	
+		SnapshotedProductGroup snapshotSubGroup = service.getProductGroupSnapshot(subGroupMember.getMemberID());	
 		assertNotNull(snapshotSubGroup);
 		assertEquals(snapshotSubGroup.getGroupType(), GroupType.ASSEMBLY);
 		assertEquals(snapshotSubGroup.getGroupName(), groupName);
@@ -76,7 +76,7 @@ public class ProductGroupServiceTest {
 		int arrayIdx = memberIndex -1;
 		ProductGroupMember subGroupMember = (ProductGroupMember)details.toArray()[arrayIdx];
 		assertEquals(MemberType.SUB_GROUP, subGroupMember.getMemberType());
-		SnapshotedProductGroup snapshotSubGroup = service.getProductGroupSnapshot(subGroupMember.getSubGroupID());	
+		SnapshotedProductGroup snapshotSubGroup = service.getProductGroupSnapshot(subGroupMember.getMemberID());	
 		assertNotNull(snapshotSubGroup);
 		assertEquals(snapshotSubGroup.getGroupType(), GroupType.ALTERNATIVE);
 		assertEquals(snapshotSubGroup.getGroupName(), groupName);
@@ -253,7 +253,7 @@ public class ProductGroupServiceTest {
 			String lineComment, int minBOMQty, int maxBOMQty) {
 		ProductGroup prodGroup = service.createProductGroupLog(entryID, entryDate, entryComment, groupType, groupName);
 		ash13ServerLog.addGroupDetail(entryID, entryDate, entryComment, 0, memberType, lineComment, 
-				prodGroup.getGroupID(), 0, minBOMQty, maxBOMQty);
+				prodGroup.getGroupID(),  minBOMQty, maxBOMQty);
 		return prodGroup;
 	}
 	
@@ -262,7 +262,7 @@ public class ProductGroupServiceTest {
 			String lineComment, int minBOMQty, int maxBOMQty) {
 		ProductGroup prodGroup = service.createProductGroupLog(entryID, entryDate, entryComment, groupType, groupName);
 		ash13ServerLog.addGroupDetail(entryID, entryDate, entryComment, lineNo, memberType, lineComment, 
-				prodGroup.getGroupID(), lineNo, minBOMQty, maxBOMQty);
+				prodGroup.getGroupID(), minBOMQty, maxBOMQty);
 		return prodGroup;
 	}
 	
@@ -270,7 +270,7 @@ public class ProductGroupServiceTest {
 			int lineNo, UUID subGroupID, MemberType memberType, 
 			String lineComment, int minBOMQty, int maxBOMQty) {
 		ash13ServerLog.updateGroupDetail(entryID, entryDate, entryComment, lineNo, memberType, lineComment, 
-				subGroupID, 0, minBOMQty, maxBOMQty);
+				subGroupID, minBOMQty, maxBOMQty);
 	}
 
 	private int getLineNo(SortedSet<ProductGroupMember> details,
@@ -278,7 +278,7 @@ public class ProductGroupServiceTest {
 		int lineNo;
 		lineNo = 0;
 		for (ProductGroupMember detail:details) {
-			if (detail.getSubGroupID() != null  && detail.getSubGroupID().equals(detailGroup.getGroupID())) {
+			if (detail.getMemberID() != null  && detail.getMemberID().equals(detailGroup.getGroupID())) {
 				lineNo = detail.getLineNo();
 				break;
 			}
